@@ -1,4 +1,4 @@
-# HISA People Chain 2.0: Africa's Resilient Digital Economy
+# HISA People Chain  Africa's Resilient Digital Economy
 
 ## Executive Summary
 
