@@ -62,7 +62,7 @@ HISA  introduces the **Adaptive Verification Layer (AVL)**, which combines:
 **Branch-Specific Tokens:**
 - **JANI HISA Token**: Environmental conservation activities (tree planting, waste management, water conservation)
 - **JANI Stable**: Stablecoin for green products and services
-- **UMOJA Token**: Community asset tokenization and ownership
+- **UMOJA Token**: securities and  asset tokenization and ownership
 - **UMOJA Stable**: Liquidity layer for asset trading
 - **UMOJA Option**: Speculative growth mechanism for tokenized assets
 - **CULTURE Asset Token**: NFT-based cultural preservation with royalty sharing
