@@ -342,7 +342,7 @@ ETF are basket of securities that act as investment vehicles and give investors 
 
 | Token | Symbol | Function |
 |-------|--------|----------|
-| Umoja Token | **UMOT 21b** | Governance + Utility + ETF Backed. Pricing includes BTC, infrastructure bonds, Gold, Umoja land, real estate and REITs Core Dao, TON, polygon, worldcoin, hbar, xrp. |
+| Umoja Token | **UMOT 21b** | Governance + Utility + ETF Backed. Pricing includes BTC, infrastructure bonds, Gold, Umoja land, real estate and REITs Core Dao, TON, polygon, worldcoin, HBAR , XRP. |
 | Umoja Stable | **UMOS infinite** | Stablecoin backed by 10% BTC, 20% Gold, 40% HBAR USDC backed, and 30% Kenyan infrastructure bonds. |
 | Umoja Options Token | **UMOO 210b** | Options trading, speculation, hedging. Works like traditional options with meme status for community engagement. |
 
