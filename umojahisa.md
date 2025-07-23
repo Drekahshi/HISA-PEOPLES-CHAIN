@@ -351,7 +351,7 @@ ETF are basket of securities that act as investment vehicles and give investors 
 #### 1. Umoja Token (UMOT)
 - **Supply:** 21 Billion
 - **Function:** Governance + Utility + ETF-backed value
-- **Backed by:** Bitcoin, Gold, Kenyan infrastructure bonds, Tokenized land, real estate, Core Dao, TON, polygon, worldcoin, hbar, xrp and REITs
+- **Backed by:** Bitcoin, Gold, Kenyan infrastructure bonds, Tokenized land, Real estate, Core Dao, TON, Polygon, Worldcoin, HBAR , XRP and REITs
 - **Use Cases:** DAO voting & governance, Access to platform services, Asset-backed price floor
 
 #### 2. Umoja Stable (UMOS)
