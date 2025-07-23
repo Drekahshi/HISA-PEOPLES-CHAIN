@@ -264,19 +264,7 @@ The **Proof of Growth (PoG)** consensus mechanism rewards nurseries based on the
 - **Reward Distribution:** Smart contract calculates and issues PoG tokens based on verified data
 - **Dispute Resolution:** If disputes arise, an arbitration process using multiple validators is triggered
 
-#### 2.2 Smart Contract Functions
 
-```solidity
-function registerNursery(address nurseryAddress, string memory location, uint256 initialTrees) public;
-
-function submitGrowthData(uint256 nurseryID, uint256 treeCount, bytes memory verificationProof) public;
-
-function validateGrowth(uint256 nurseryID, bool isVerified) public;
-
-function distributeRewards(uint256 nurseryID) private;
-
-function resolveDispute(uint256 nurseryID) public;
-```
 
 ### 3. Data Collection & Verification
 
