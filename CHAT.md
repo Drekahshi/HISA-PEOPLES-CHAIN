@@ -65,7 +65,7 @@ Global Distribution (Education, Research, Cultural Exchange)
 ## Token Economics & Governance
 
 ### Single-Token Architecture: CHATs
-
+Total supply of 10 billion tokens.
 **Cultural Heritage Asset Tokens (CHATs)** serve multiple functions within a unified framework:
 
 - **Asset Representation**: Each CHAT represents a specific cultural heritage asset
