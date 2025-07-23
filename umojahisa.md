@@ -840,5 +840,50 @@ Transformation of illiquid assets into productive, yield-generating instruments
 
 UMOJA doesn’t just solve today’s problems—it builds tomorrow’s prosperity.
 
+# QR-Based Scan-to-Send Payments in Umoja HISA
+
+Umoja HISA introduces a **QR-powered scan-to-send payment system** designed to improve and eventually replace traditional mobile money flows like M-PESA. 
+
+## Key Challenges Addressed
+- Eliminates manual number entry (common in Kenya's mobile payments)
+- Reduces errors and fraud risks
+- Accelerates transaction speed dramatically
+
+## How It Works
+1. **Generate QR Code**:  
+   Each wallet creates a unique QR containing:
+   - Recipient's wallet address
+   - Token type (e.g., UMOJA, UMOJA_STABLE)
+   - Optional amount/message
+2. **Scan & Confirm**:  
+   Sender scans via:
+   - Umoja app
+   - USSD agent interface
+3. **Instant Settlement**:  
+   - Funds transfer in **3–5 seconds**  
+   - Fees: **< $0.01** via Hedera's network
+
+## Core Benefits
+✅ **Error Elimination**: Automated address handling  
+✅ **Financial Inclusion**:  
+   - Offline support (voice/SMS/WhatsApp QR sharing)  
+   - Feature phone users via agent scanning  
+✅ **Enterprise Use Cases**:  
+   - Programmable invoices for merchants/schools/NGOs  
+   - Audit-ready payment trails  
+
+## Technical Advantages (via Hedera Hashgraph)
+⚡ Ultra-low-cost cross-border transfers  
+🔍 Transparent, programmable transactions  
+🤖 Integrated with Umoja’s agentic AI & social finance logic  
+
+## Strategic Impact
+Serves as the foundation for:  
+- Community pooling  
+- Inheritance solutions  
+- Everyday digital transactions  
+
+> *"Unlocks a frictionless, trusted, and inclusive financial experience across Africa."*
+
 
 
