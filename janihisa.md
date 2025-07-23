@@ -768,3 +768,123 @@ A **flexible, community-driven technology stack** enabling rapid advancements.
 - **Bounty programs** for tackling critical environmental challenges
 
 
+# Tera Farm Framework: Replanting Food Sovereignty Through Decentralization
+
+Tera Farm is a decentralized farming agency developed by Bankai Labs within the Jani Ecosystem, created to tackle the deeply rooted issues of food insecurity, rural poverty, and disconnected food systems. Born from the belief that food is not just a need but a right, Tera Farm bridges smallholder farmers to a digitized economy—one that is fair, transparent, and rooted in community.
+
+We believe that with today's technological advancements, every person should access healthy, natural food. Our goal is to make this accessible, locally grown, and fairly priced food a daily reality. And at the heart of this transformation are the Terraform Units—living nodes in a decentralized network of farms powered by Hedera Hashgraph.
+
+---
+
+## 🌾 What is a Terraform Unit?
+
+A **Terraform** is a GPS-mapped, tokenized farm that operates as both an agricultural producer and conservation node:
+
+- **Digital Identity**: Registered on-chain with precise boundaries
+- **Dual Tokens**: $CROP_TOK (harvests) + JANI_TOK (conservation)
+- **Access**: USSD, mobile app, web—no blockchain expertise needed
+- **Conservation**: Automatic participation in JANI environmental programs
+
+*Example: A Kilifi mango farmer tokenizes harvest as $MANGO_TOK while earning JANI_TOK for community borehole maintenance.*
+
+---
+
+## ⚡ Hedera Infrastructure
+
+Shared foundation with JANI for maximum efficiency:
+
+| Service | Farm Use | JANI Integration |
+|---------|----------|------------------|
+| **HTS** | Tokenize crops/water | Mint conservation rewards |
+| **Smart Contracts** | Auto-payments | Trigger sustainability bonuses |
+| **HCS** | Supply chain logs | Track carbon/tree impact |
+| **HBAR** | Instant settlements | Fund infrastructure bonds |
+
+---
+
+## 🚀 Farmer Journey
+
+### Onboarding
+1. **GPS Verification**: JANI validators confirm boundaries
+2. **Conservation Pledge**: Commit to agroforestry, water stewardship, organic practices
+3. **AI Assistant**: WhatsApp bots, voice guides in local languages
+
+### Marketplace
+- **QR Traceability**: Scan products to see journey + environmental impact
+- **Dynamic Pricing**: Base price + sustainability bonus - carbon debt
+- **Carbon Bundles**: Buy crops + verified offsets together
+
+### Rewards System
+| Activity | Tera Reward | JANI Reward |
+|----------|-------------|-------------|
+| Organic certification | +15% crop value | 10 JANI_TOK |
+| Water conservation | Efficiency bonuses | 2x staking APY |
+| Tree planting | Premium pricing | 1 JANI_TOK/tree |
+| Youth training | Micro-tokens | Governance rights |
+
+---
+
+## 💧 Water Integration
+
+- **Tokenized Rights**: Drill bore holes and aid in water storage by having pools that buy tanks for people who have staked
+- **IoT Monitoring**: Real-time usage via JANI sensor network
+- **Conservation Loop**: Efficient use → Better soil scores → Higher JANI rewards
+
+---
+
+## 🏛️ Governance
+
+### Farmer Circles (Local DAOs)
+- 15-20 farms per circle
+- Vote on water fees, crop pricing, conservation projects
+- 1 farm = 1 vote
+
+### JANI Global DAO
+- Manages ecosystem funds
+- Approves major infrastructure (boreholes via Green Bonds)
+- Quadratic voting for major decisions
+
+---
+
+
+
+**Revenue Streams:**
+- Transaction fees (1% crops, 0.5% water, 2% carbon)
+- Premium analytics services
+- Partnership & data licensing
+
+---
+
+## 🌍 The Vision: Regenerative Villages
+
+**Bungoma**: Farmers use tokenized water for drought-resistant crops, selling to schools while earning JANI tokens for stream-protecting trees.
+
+**Kibera**: Youth deliver Tera produce via QR-coded motorcycles, earning micro-tokens through JANI verification.
+
+**Kisii**: Grandmothers receive smart receipts for traditional bananas while teaching youth through tokenized knowledge systems.
+
+**Turkana**: Pastoralists earn tokens for replanting drylands and managing rotational grazing with shared water points.
+
+---
+
+## 🔧 Technical Stack
+
+**Smart Contracts**: Farm registry, harvest rewards, water rights
+**Tokens**: HTS-based crops, JANI conservation, NFT ownership
+**Data**: On-chain transactions, off-chain records (IPFS), real-time IoT streams
+**Integration**: Weather feeds, satellite imagery, mobile payments
+
+---
+
+## 🤝 Getting Started
+
+**Farmers**: Download app → GPS verify → Start earning
+**Buyers**: Scan QR → See impact → Purchase bundles  
+
+
+---
+
+*Together, we grow more than food. We grow resilience.*
+
+
+
