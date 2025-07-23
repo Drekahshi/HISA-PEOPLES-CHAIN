@@ -397,7 +397,7 @@ The Umoja ecosystem is designed for **sustainable token utility**, **value captu
 ### Primary Revenue Streams
 
 #### Tokenization as a Service (TaaS)
-Umoja provides asset owners (individuals, companies, institutions) with a platform to tokenize real estate, land, infrastructure bonds, and other RWAs. Revenue from token listing fees, token issuance services, legal compliance onboarding, and valuation.
+Umoja provides asset owners (individuals, companies, institutions) with a platform to tokenize real estate, land, infrastructure bonds, and other RWAs. Revenue from token listing fees, token issuance services, legal compliance onboarding, and valuation.Leasehold land will be bought by UMOJA tokenised and then enable interested parties to fractionally own a diversified asset 
 
 #### Transaction & Protocol Fees
 Small fees on trades, staking, lending, and liquidity provisioning across Umoja DEX and yield farming platforms.
