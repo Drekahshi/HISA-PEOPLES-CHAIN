@@ -2,7 +2,7 @@
 
 ## Abstract
 
-JANI Hisa is a hedera -powered database framework designed to incentivize environmental conservation efforts, with a strong focus on conservation, protection, preservation and restoration through reforestation, afforestation, agroforestry, and sustainable land management practices. Built on the energy-efficient blockchain and scaled on, JANI ecosystem fosters transparency, decentralized governance, and financial sustainability for Community Forest Associations (CFAs) eg seedling user groups and other CFA user groups and environmental stakeholders. 
+JANI Hisa is a hedera -powered database framework designed to incentivize environmental conservation efforts, with a strong focus on conservation, protection, preservation and restoration through reforestation, afforestation, agroforestry, and sustainable land management practices on  both land and sea. Built on the energy-efficient blockchain and scaled on, JANI ecosystem fosters transparency, decentralized governance, and financial sustainability for Community Forest Associations (CFAs) eg seedling user groups and other CFA user groups and environmental stakeholders. 
 
 Additionally, JANI promotes youth and women empowerment by providing leadership roles and financial incentives. Each verified tree planted results in the minting of one JANI token, directly linking environmental restoration with financial rewards. JANI ecosystem believes in carbon footprint reduction using nature based solution individuals, businesses and companies can join us in our valiant mission. This is JANI's economic model, governance framework, verification mechanisms, and strategies for scalability and adoption.
 
