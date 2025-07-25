@@ -1,5 +1,5 @@
 # CHAT: Cultural Heritage Asset Tokens
-## Decentralized Museum for African Culture - Whitepaper
+## Decentralized Museum for African Culture 
 
 ---
 
