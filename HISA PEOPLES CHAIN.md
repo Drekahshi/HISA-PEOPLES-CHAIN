@@ -1,6 +1,5 @@
 # HISA People Chain Africa's Resilient Democratised Decentralised Digital Economy
 
-Abstract
 HISA is a decentralized, AI-powered financial and wellness ecosystem focused on Africa's Sustainable Development Goals (SDGs), with a core emphasis on mental health-awareness, conservation, data rights, and equitable finance inclusion opportunities. Built on Hedera Hashgraph, HISA fuses agentic AI, smart contracts, and AMM-style liquidity pools to enable users to earn passive income, access mental health resources, and tokenize real-world contributions through a trust-minimized, privacy-preserving infrastructure that supports both online and offline (USSD/SSD) interaction. This protocol enables 350 million feature phone users to participate in tokenized ecosystems through financial inclusion, conservation verification tokenization, cultural preservation, and wellness activities. By integrating multi-modal verification, diversified token economics, and community-powered governance, HISA creates an unbreakable infrastructure for achieving Sustainable Development Goals while ensuring digital inclusion, economic resilience, and cultural sovereignty.
 
 Core Mission
