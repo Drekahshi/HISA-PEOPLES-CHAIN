@@ -1,4 +1,4 @@
-# HISA People Chain: Achieving All 17 SDGs Through Blockchain Innovation
+# HISA People Chain: Achieving All 17 SDGs Through HEDERA DISTRIBUTED LEDGER TECHNOLOGY
 
 ## Overview
 HISA People Chain is a comprehensive blockchain ecosystem designed to address all 17 United Nations Sustainable Development Goals (SDGs) through three interconnected protocol branches: JANI HISA (Environmental), UMOJA HISA (Financial), and CULTURE HISA (Cultural). Built on Hedera's carbon-negative infrastructure, HISA transforms sustainable development from charity-based models to economically viable, tokenized incentive systems.
