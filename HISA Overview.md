@@ -32,7 +32,7 @@ HISA's economic model represents a sophisticated balance between immediate user 
 
 - **Base $HISA Token**: The foundational currency with anti-inflation mechanisms
 - **Activity-Specific Tokens**: JANI for environmental work database, UMOJA for  tokenization of securities, CULTURE for traditional knowledge database
-- **Stability Mechanisms**: Reserve funds, graduated rewards, and emergency interventions
+- **Stability Mechanisms**:Overcollateralization of Stablecoins,AMM on smartcontracts with agentic help, Reserve funds, graduated rewards, and emergency interventions
 - **Community Treasury**: Funded by transaction fees for collective benefit
 
 This diversified approach prevents the economic volatility that often plagues single-token systems while providing multiple pathways for value creation and exchange.
