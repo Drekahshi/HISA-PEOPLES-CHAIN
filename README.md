@@ -151,5 +151,5 @@ HISA is:
 ---
 
 <blockquote>
-"Ubuntu meets blockchain: I am because we are, and we are because our systems are unbreakable."
+"Ubuntu meets blockchain: I am because we are, and we are because our systems are unbreakable." https://hisa-heartbeat-prompts.lovable.app
 </blockquote>
