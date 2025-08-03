@@ -49,4 +49,5 @@
 
 ---
 
-Let me know if you'd like this deployed as a GitHub repo, integrated into your Dev Portal, or connected with a starter boilerplate for Python/JS SDKs.
+
+
