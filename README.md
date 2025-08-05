@@ -140,7 +140,7 @@ Not just a product—**a platform** for:
 - 💡 Education via agentic AI  
 - 🔐 Trust-minimized economies
 
-https://lovable.dev/projects/244a4e9d-dc25-4d34-bc97-f6d857bc0fec
+
 
 ---
 
@@ -168,8 +168,11 @@ https://lovable.dev/projects/244a4e9d-dc25-4d34-bc97-f6d857bc0fec
 - 🌍 **Real-World Results**  
 - 🕸️ **Network Effect**  
 - 🛠️ **Built for the Future**
+ 
+https://lovable.dev/projects/244a4e9d-dc25-4d34-bc97-f6d857bc0fec
 
 ---
+
 
 
 
