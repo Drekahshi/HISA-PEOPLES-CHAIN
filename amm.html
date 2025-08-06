@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HISA Automated Market Maker (AMM)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .amm-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .amm-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: rgba(0, 10, 30, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .panel-title i {
+            color: #4dabf7;
+        }
+        
+        .reserves {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .reserve-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .reserve-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .token-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .token-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: #2c3e50;
+        }
+        
+        .token-icon.blue {
+            background: linear-gradient(135deg, #3498db, #1a5276);
+        }
+        
+        .token-icon.red {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .token-details h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .token-details p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        .reserve-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .constant-product {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .constant-product h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        
+        .k-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4dabf7;
+            margin: 10px 0;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            margin-top: 15px;
+        }
+        
+        .swap-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .swap-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .input-group select, 
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .input-group input {
+            margin-top: 5px;
+        }
+        
+        .swap-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #4dabf7, #1c7ed6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .swap-btn:hover {
+            background: linear-gradient(135deg, #3d9be0, #0d6ecb);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .swap-btn:active {
+            transform: translateY(0);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .reset-btn:hover {
+            background: linear-gradient(135deg, #d43f30, #b02a1a);
+        }
+        
+        .swap-result {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+        
+        .swap-result span {
+            color: #4dabf7;
+            font-weight: bold;
+        }
+        
+        .price-chart {
+            height: 300px;
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .chart-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(100% - 40px);
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+        
+        .info-panel {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .info-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-card p {
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .ecosystem-overview {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .ecosystem-overview h3 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        .pool-list {
+            margin-left: 20px;
+        }
+
+        .pool-list li {
+            margin-bottom: 15px;
+        }
+
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4dabf7, #1c7ed6);
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .result-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        .result-table th,
+        .result-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-table th {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .highlight {
+            color: #4dabf7;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>HISA Automated Market Maker (AMM)</h1>
+            <p class="subtitle">A decentralized finance platform with JANI, UMOJA, and CHAT ecosystems. Swap tokens, provide liquidity, calculate rewards, analyze arbitrage, and simulate price impact.</p>
+        </header>
+
+        <div class="ecosystem-overview">
+            <div class="panel-title">
+                <i class="fas fa-globe"></i>
+                <h2>Ecosystem Overview</h2>
+            </div>
+            <div id="ecosystem-display"></div>
+        </div>
+
+        <div class="amm-container">
+            <div class="panel">
+                <div class="panel-title">
+                    <i class="fas fa-coins"></i>
+                    <h2>Pool Reserves</h2>
+                </div>
+                
+                <div class="reserves">
+                    <div class="reserve-card">
+                        <div class="token-info">
+                            <div class="token-icon blue">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="token-details">
+                                <h3 id="token-a-name">HISA</h3>
+                                <p>Reserve amount</p>
+                            </div>
+                        </div>
+                        <div class="reserve-amount" id="token-a-reserve">100000</div>
+                    </div>
+                    
+                    <div class="reserve-card">
+                        <div class="token-info">
+                            <div class="token-icon red">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="token-details">
+                                <h3 id="token-b-name">USDC</h3>
+                                <p>Reserve amount</p>
+                            </div>
+                        </div>
+                        <div class="reserve-amount" id="token-b-reserve">500000</div>
+                    </div>
+                </div>
+                
+                <div class="constant-product">
+                    <h3>Constant Product Formula</h3>
+                    <div class="k-value" id="k-value">50000000000</div>
+                    <p id="k-formula-text">HISA Reserve × USDC Reserve = k (Constant)</p>
+                    <div class="formula">
+                        x * y = k
+                    </div>
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="swap">Swap</button>
+                        <button class="tab-btn" data-tab="liquidity">Add Liquidity</button>
+                        <button class="tab-btn" data-tab="rewards">LP Rewards</button>
+                        <button class="tab-btn" data-tab="arbitrage">Arbitrage</button>
+                        <button class="tab-btn" data-tab="price-impact">Price Impact</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="tab-swap">
+                        <div class="swap-container">
+                            <div class="swap-title">
+                                <i class="fas fa-exchange-alt"></i>
+                                <h2>Swap Tokens</h2>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="pool-select">Select Pool:</label>
+                                <select id="pool-select"></select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="input-token">From:</label>
+                                <select id="input-token"></select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="input-amount">Amount:</label>
+                                <input type="number" id="input-amount" min="0" step="0.01" placeholder="Enter amount" value="1">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="output-token">To:</label>
+                                <select id="output-token"></select>
+                            </div>
+                            
+                            <button class="swap-btn pulse" id="swap-btn">
+                                <i class="fas fa-sync-alt"></i> Execute Swap
+                            </button>
+                            
+                            <div class="swap-result">
+                                You will receive: <span id="output-amount">0 USDC</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="tab-liquidity">
+                        <div class="swap-container">
+                            <div class="swap-title">
+                                <i class="fas fa-plus"></i>
+                                <h2>Add Liquidity</h2>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="liquidity-amount-a">Token A Amount:</label>
+                                <input type="number" id="liquidity-amount-a" min="0" step="0.01" value="0">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="liquidity-amount-b">Token B Amount:</label>
+                                <input type="number" id="liquidity-amount-b" min="0" step="0.01" value="0">
+                            </div>
+                            
+                            <button class="swap-btn" id="add-liquidity-btn">
+                                <i class="fas fa-plus"></i> Add Liquidity
+                            </button>
+                            
+                            <div class="swap-result" id="liquidity-result">
+                                Result: <span id="liquidity-output">Enter amounts to see result</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="tab-rewards">
+                        <div class="swap-container">
+                            <div class="swap-title">
+                                <i class="fas fa-wallet"></i>
+                                <h2>LP Rewards Calculator</h2>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="lp-percent">Liquidity Percentage (0-100):</label>
+                                <input type="number" id="lp-percent" min="0" max="100" step="0.01" value="1">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="lp-days">Time Period (days):</label>
+                                <input type="number" id="lp-days" min="1" step="1" value="30">
+                            </div>
+                            
+                            <button class="swap-btn" id="calculate-rewards-btn">
+                                <i class="fas fa-calculator"></i> Calculate Rewards
+                            </button>
+                            
+                            <div class="swap-result" id="rewards-result">
+                                <table class="result-table">
+                                    <tr><th>Metric</th><th>Value</th></tr>
+                                    <tr><td>Liquidity Value</td><td id="rewards-liquidity">$0</td></tr>
+                                    <tr><td>Daily Volume</td><td id="rewards-volume">$0</td></tr>
+                                    <tr><td>Daily Fees</td><td id="rewards-fees">$0</td></tr>
+                                    <tr><td>User Daily Share</td><td id="rewards-share">$0</td></tr>
+                                    <tr><td>Period Rewards</td><td id="rewards-period">$0</td></tr>
+                                    <tr><td>Estimated APY</td><td id="rewards-apy">0%</td></tr>
+                                    <tr><td>ROI</td><td id="rewards-roi">0%</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="tab-arbitrage">
+                        <div class="swap-container">
+                            <div class="swap-title">
+                                <i class="fas fa-chart-line"></i>
+                                <h2>Arbitrage Calculator</h2>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="arbitrage-token">Token:</label>
+                                <select id="arbitrage-token"></select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="external-price">External Price (in USDC):</label>
+                                <input type="number" id="external-price" min="0" step="0.01" value="0">
+                            </div>
+                            
+                            <button class="swap-btn" id="calculate-arbitrage-btn">
+                                <i class="fas fa-calculator"></i> Calculate Arbitrage
+                            </button>
+                            
+                            <div class="swap-result" id="arbitrage-result">
+                                <table class="result-table">
+                                    <tr><th>Metric</th><th>Value</th></tr>
+                                    <tr><td>Pool Price</td><td id="arbitrage-pool-price">0</td></tr>
+                                    <tr><td>External Price</td><td id="arbitrage-external-price">0</td></tr>
+                                    <tr><td>Price Difference</td><td id="arbitrage-diff">0</td></tr>
+                                    <tr><td>Price Diff %</td><td id="arbitrage-diff-percent">0%</td></tr>
+                                    <tr><td>Arbitrage Opportunity</td><td id="arbitrage-opportunity">No</td></tr>
+                                    <tr><td>Optimal Amount</td><td id="arbitrage-amount">0</td></tr>
+                                    <tr><td>Estimated Profit</td><td id="arbitrage-profit">$0</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="tab-price-impact">
+                        <div class="swap-container">
+                            <div class="swap-title">
+                                <i class="fas fa-balance-scale"></i>
+                                <h2>Price Impact Simulator</h2>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="impact-token">Token:</label>
+                                <select id="impact-token"></select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="impact-amount">Amount:</label>
+                                <input type="number" id="impact-amount" min="0" step="0.01" value="1">
+                            </div>
+                            
+                            <button class="swap-btn" id="calculate-impact-btn">
+                                <i class="fas fa-calculator"></i> Simulate Price Impact
+                            </button>
+                            
+                            <div class="swap-result" id="impact-result">
+                                <table class="result-table">
+                                    <tr><th>Metric</th><th>Value</th></tr>
+                                    <tr><td>Amount Out</td><td id="impact-amount-out">0</td></tr>
+                                    <tr><td>Fee</td><td id="impact-fee">0</td></tr>
+                                    <tr><td>Price Impact</td><td id="impact-percent">0%</td></tr>
+                                    <tr><td>New Price A/B</td><td id="impact-price-a">0</td></tr>
+                                    <tr><td>New Price B/A</td><td id="impact-price-b">0</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="swap-btn reset-btn" id="reset-btn">
+                    <i class="fas fa-undo"></i> Reset Pools
+                </button>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-title">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Pool Information</h2>
+                </div>
+                
+                <div class="price-chart">
+                    <div class="chart-title">
+                        <i class="fas fa-info-circle"></i>
+                        <h3 id="price-chart-title">HISA/USDC Price Relationship</h3>
+                    </div>
+                    <div class="chart-placeholder" id="price-chart">
+                        Price: 1 <span id="price-token-a">HISA</span> = <span id="current-price">5</span> <span id="price-token-b">USDC</span>
+                    </div>
+                </div>
+                
+                <div class="chart-title" style="margin-top: 40px;">
+                    <i class="fas fa-list"></i>
+                    <h3>Ecosystem Prices</h3>
+                </div>
+                
+                <div class="swap-container">
+                    <table class="result-table" id="prices-table">
+                        <tr><th>Token</th><th>Price (USDC)</th></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <div class="info-card">
+                <h3><i class="fas fa-lightbulb"></i> How AMMs Work</h3>
+                <p>Automated Market Makers (AMMs) use mathematical formulas to provide liquidity automatically. The constant product formula (x * y = k) ensures that the product of the quantities of two tokens in a pool remains constant.</p>
+                <p>When you swap one token for another, the pool adjusts the price based on the ratio of the remaining tokens, ensuring there's always liquidity available.</p>
+            </div>
+            
+            <div class="info-card">
+                <h3><i class="fas fa-calculator"></i> Price Impact</h3>
+                <p>The price of tokens in an AMM changes with each trade. Larger trades have greater price impact because they significantly change the ratio of tokens in the pool.</p>
+                <p>Price = (Reserve of token you're selling) / (Reserve of token you're buying)</p>
+            </div>
+            
+            <div class="info-card">
+                <h3><i class="fas fa-wallet"></i> Liquidity Provider Fees</h3>
+                <p>Each swap includes a fee (typically 0.3%) that goes to liquidity providers. This fee is added to the pool, increasing the value of liquidity provider tokens.</p>
+                <p>In this simulation, fees are automatically calculated and added to the reserves after each swap.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>HISA Automated Market Maker Simulation | Constant Product Formula (x * y = k) | DeFi Implementation</p>
+            <p>Note: This is a simplified simulation for educational purposes</p>
+        </div>
+    </div>
+
+    <script>
+        // Set Decimal.js precision
+        Decimal.set({ precision: 28 });
+
+        // Token symbols
+        const TOKEN_SYMBOLS = [
+            "HISA", "USDC", "JANI", "CHAT", "UMOJA",
+            "UMOJA_OPTION", "JANI_STABLE", "UMOJA_STABLE", "HBAR"
+        ];
+
+        // Initial pool states for reset
+        const INITIAL_POOLS = [
+            { tokenA: "HISA", tokenB: "USDC", initialA: 100000, initialB: 500000, feeRate: 0.003 },
+            { tokenA: "JANI", tokenB: "USDC", initialA: 50000, initialB: 250000, feeRate: 0.003 },
+            { tokenA: "CHAT", tokenB: "USDC", initialA: 75000, initialB: 375000, feeRate: 0.003 },
+            { tokenA: "UMOJA", tokenB: "USDC", initialA: 80000, initialB: 400000, feeRate: 0.003 },
+            { tokenA: "JANI_STABLE", tokenB: "USDC", initialA: 200000, initialB: 200000, feeRate: 0.001 },
+            { tokenA: "UMOJA_STABLE", tokenB: "USDC", initialA: 200000, initialB: 200000, feeRate: 0.001 },
+            { tokenA: "UMOJA_OPTION", tokenB: "UMOJA", initialA: 1000000, initialB: 50000, feeRate: 0.003 },
+            { tokenA: "JANI", tokenB: "JANI_STABLE", initialA: 50000, initialB: 50000, feeRate: 0.003 },
+            { tokenA: "UMOJA", tokenB: "UMOJA_STABLE", initialA: 80000, initialB: 80000, feeRate: 0.003 },
+            { tokenA: "HBAR", tokenB: "USDC", initialA: 200000, initialB: 100000, feeRate: 0.003 }
+        ];
+
+        // Pool class
+        class Pool {
+            constructor(tokenASymbol, tokenBSymbol, initialA, initialB, feeRate = '0.003') {
+                if (!TOKEN_SYMBOLS.includes(tokenASymbol) || !TOKEN_SYMBOLS.includes(tokenBSymbol)) {
+                    throw new Error(`Invalid token symbols. Valid tokens: ${TOKEN_SYMBOLS.join(', ')}`);
+                }
+                this.tokenA_symbol = tokenASymbol;
+                this.tokenB_symbol = tokenBSymbol;
+                this.token_a_reserve = new Decimal(initialA);
+                this.token_b_reserve = new Decimal(initialB);
+                this.fee_rate = new Decimal(feeRate);
+            }
+
+            get k() {
+                return this.token_a_reserve.mul(this.token_b_reserve);
+            }
+
+            get price_a_in_b() {
+                return this.token_a_reserve.eq(0)
+                    ? new Decimal(0)
+                    : this.token_b_reserve.div(this.token_a_reserve);
+            }
+
+            get price_b_in_a() {
+                return this.token_b_reserve.eq(0)
+                    ? new Decimal(0)
+                    : this.token_a_reserve.div(this.token_b_reserve);
+            }
+        }
+
+        // Ecosystem classes
+        class EcosystemPool {
+            constructor({ name, purpose, participants, rewards, mechanisms }) {
+                this.name = name;
+                this.purpose = purpose;
+                this.participants = participants;
+                this.rewards = rewards;
+                this.mechanisms = mechanisms;
+            }
+        }
+
+        class Ecosystem {
+            constructor({ name, description, pools = [] }) {
+                this.name = name;
+                this.description = description;
+                this.pools = pools.map(p => new EcosystemPool(p));
+            }
+
+            display() {
+                let html = `<h3>${this.name}</h3><p>${this.description}</p><ul class="pool-list">`;
+                this.pools.forEach((p, i) => {
+                    html += `
+                        <li>
+                            <strong>${p.name}</strong><br>
+                            Purpose: ${p.purpose}<br>
+                            Participants: ${p.participants.join(', ')}<br>
+                            Rewards: ${p.rewards.join(', ')}<br>
+                            Mechanisms: ${p.mechanisms.join(', ')}
+                        </li>`;
+                });
+                html += '</ul>';
+                return html;
+            }
+        }
+
+        // HISA AMM class
+        class HISAAMM {
+            constructor() {
+                this.pools = new Map();
+                this.total_fees_collected = new Decimal(0);
+                this.ecosystems = this._initialize_hisa_ecosystems();
+                this._initialize_amm_pools();
+            }
+
+            _initialize_hisa_ecosystems() {
+                return {
+                    'JANI': new Ecosystem({
+                        name: "🌿 JANI HISA (Conservation Ecosystem)",
+                        description: "Focuses on tree planting, environmental regeneration, and carbon offset tokenization.",
+                        pools: [
+                            {
+                                name: "Tree-Planting Staking Pool",
+                                purpose: "Reward verified planting and growth of trees.",
+                                participants: ["Farmers", "Nurseries", "Community Forest Associations"],
+                                rewards: ["JANI tokens", "NFTs", "Impact score badges"],
+                                mechanisms: ["Stake JANI", "Proof-of-Growth validation", "ZK oracles"]
+                            },
+                            {
+                                name: "Bamboo Carbon Offset Pool",
+                                purpose: "Incentivize bamboo farming for carbon credits.",
+                                participants: ["Bamboo Farmers", "Offset buyers"],
+                                rewards: ["HBAR tokens", "NFTs"],
+                                mechanisms: ["Staking", "Validator & AI verification", "Tokenized offsets"]
+                            },
+                            {
+                                name: "Validator Reward Pool",
+                                purpose: "Pay validators for verifying impact activities.",
+                                participants: ["Community validators", "AI agents"],
+                                rewards: ["JANI tokens", "Tiered validator bonuses"],
+                                mechanisms: ["GPS triangulation", "AI audit", "Staking + trust scores"]
+                            }
+                        ]
+                    }),
+                    'UMOJA': new Ecosystem({
+                        name: "🏛️ UMOJA HISA (Financial Ecosystem)",
+                        description: "Focuses on tokenized prosperity, access to capital, and fractional finance.",
+                        pools: [
+                            {
+                                name: "Fractional Ownership Pool",
+                                purpose: "Enable co-ownership of land, businesses, etc.",
+                                participants: ["Retail investors", "Local SMEs", "Farm cooperatives"],
+                                rewards: ["Yield", "Tokenized dividends"],
+                                mechanisms: ["Stake UMOJA", "Fractional asset tokens", "Governance"]
+                            },
+                            {
+                                name: "Microfinance & Chama Pool",
+                                purpose: "Empower communities to lend/borrow transparently.",
+                                participants: ["Chamas", "Women groups", "Youth SACCOs"],
+                                rewards: ["Interest", "Governance boosts"],
+                                mechanisms: ["DAO votes", "Loan tracking", "Staking UMOJA"]
+                            },
+                            {
+                                name: "Diaspora Investment Pool",
+                                purpose: "Let diaspora invest in African development projects.",
+                                participants: ["Diaspora funders", "Local entrepreneurs"],
+                                rewards: ["Yields", "Land shares", "Impact tokens"],
+                                mechanisms: ["Stake or donate", "Geo-targeted reporting", "Transparency dashboard"]
+                            }
+                        ]
+                    }),
+                    'CHAT': new Ecosystem({
+                        name: "🎤 CHAT HISA (Cultural Ecosystem)",
+                        description: "Preserves, tokenizes, and rewards cultural memory through NFTs and voice-driven content.",
+                        pools: [
+                            {
+                                name: "Voice-to-NFT Pool",
+                                purpose: "Monetize oral histories via AI transcription + tokenization.",
+                                participants: ["Elders", "Youth contributors"],
+                                rewards: ["CHAT tokens", "Royalties", "NFT minting rights"],
+                                mechanisms: ["Voice onboarding", "AI dialect tagging", "Mobile-to-IPFS"]
+                            },
+                            {
+                                name: "Curation DAO Pool",
+                                purpose: "Community votes to feature top cultural works.",
+                                participants: ["Token holders", "Curators", "Communities"],
+                                rewards: ["Revenue share", "Exposure in digital museums"],
+                                mechanisms: ["Quadratic voting", "Governance staking", "NFT feature rights"]
+                            },
+                            {
+                                name: "Licensing & Royalty Pool",
+                                purpose: "Distribute royalties from AR/VR and platform access.",
+                                participants: ["Creators", "Conservation vaults"],
+                                rewards: ["CHAT tokens", "Burn incentives"],
+                                mechanisms: ["Automated fee sharing", "NFT usage tracking", "Royalty splits"]
+                            }
+                        ]
+                    })
+                };
+            }
+
+            _initialize_amm_pools() {
+                INITIAL_POOLS.forEach(({ tokenA, tokenB, initialA, initialB, feeRate }) => {
+                    this.create_pool(tokenA, tokenB, initialA, initialB, feeRate);
+                });
+            }
+
+            reset_pools() {
+                this.pools.clear();
+                this.total_fees_collected = new Decimal(0);
+                this._initialize_amm_pools();
+            }
+
+            create_pool(tokenA, tokenB, initialA, initialB, feeRate = 0.003) {
+                const key = [tokenA, tokenB].sort().join('-');
+                if (this.pools.has(key)) {
+                    throw new Error(`Pool ${key} already exists`);
+                }
+                const pool = new Pool(tokenA, tokenB, initialA, initialB, feeRate);
+                this.pools.set(key, pool);
+                return key;
+            }
+
+            get_swap_amount_out(poolId, tokenIn, amountIn) {
+                const pool = this.pools.get(poolId);
+                if (!pool) throw new Error(`Pool ${poolId} does not exist`);
+                const amount_in = new Decimal(amountIn);
+
+                let reserve_in, reserve_out, tokenOut;
+                if (tokenIn === pool.tokenA_symbol) {
+                    reserve_in = pool.token_a_reserve;
+                    reserve_out = pool.token_b_reserve;
+                    tokenOut = pool.tokenB_symbol;
+                } else if (tokenIn === pool.tokenB_symbol) {
+                    reserve_in = pool.token_b_reserve;
+                    reserve_out = pool.token_a_reserve;
+                    tokenOut = pool.tokenA_symbol;
+                } else {
+                    throw new Error(`Token ${tokenIn} not found in pool ${poolId}`);
+                }
+
+                const fee_amount = amount_in.mul(pool.fee_rate);
+                const amount_after = amount_in.minus(fee_amount);
+                let amount_out = reserve_out.mul(amount_after).div(reserve_in.plus(amount_after));
+                if (amount_out.ltn(0)) amount_out = new Decimal(0);
+                return { amount_out, fee_amount, token_out: tokenOut };
+            }
+
+            execute_swap(poolId, tokenIn, amountIn) {
+                const pool = this.pools.get(poolId);
+                if (!pool) throw new Error(`Pool ${poolId} does not exist`);
+
+                const { amount_out, fee_amount, token_out } = this.get_swap_amount_out(poolId, tokenIn, amountIn);
+                const amtInDecimal = new Decimal(amountIn);
+
+                if (tokenIn === pool.tokenA_symbol) {
+                    if (amount_out.gt(pool.token_b_reserve)) {
+                        throw new Error(`Insufficient ${pool.tokenB_symbol} liquidity.`);
+                    }
+                    pool.token_a_reserve = pool.token_a_reserve.plus(amtInDecimal);
+                    pool.token_b_reserve = pool.token_b_reserve.minus(amount_out);
+                } else {
+                    if (amount_out.gt(pool.token_a_reserve)) {
+                        throw new Error(`Insufficient ${pool.tokenA_symbol} liquidity.`);
+                    }
+                    pool.token_b_reserve = pool.token_b_reserve.plus(amtInDecimal);
+                    pool.token_a_reserve = pool.token_a_reserve.minus(amount_out);
+                }
+
+                this.total_fees_collected = this.total_fees_collected.plus(fee_amount);
+
+                return {
+                    pool_id: poolId,
+                    token_in: tokenIn,
+                    amount_in: amtInDecimal.toNumber(),
+                    token_out,
+                    amount_out: amount_out.toNumber(),
+                    fee_paid: fee_amount.toNumber(),
+                    new_price_a_in_b: pool.price_a_in_b.toNumber(),
+                    new_price_b_in_a: pool.price_b_in_a.toNumber()
+                };
+            }
+
+            add_liquidity(poolId, amountA, amountB) {
+                const pool = this.pools.get(poolId);
+                if (!pool) throw new Error(`Pool ${poolId} does not exist`);
+                const a = new Decimal(amountA);
+                const b = new Decimal(amountB);
+                if (a.lte(0) || b.lte(0)) {
+                    throw new Error("Amounts must be positive.");
+                }
+
+                if (!pool.token_a_reserve.eq(0) && !pool.token_b_reserve.eq(0)) {
+                    const current_ratio = pool.token_a_reserve.div(pool.token_b_reserve);
+                    const provided_ratio = a.div(b);
+                    const reldiff = current_ratio.sub(provided_ratio).abs().div(current_ratio);
+                    if (reldiff.gt(new Decimal("0.001"))) {
+                        console.warn(`Warning: Liquidity amounts don't match current pool ratio. Current: ${current_ratio.toFixed(6)}, Provided: ${provided_ratio.toFixed(6)}`);
+                    }
+                }
+
+                pool.token_a_reserve = pool.token_a_reserve.plus(a);
+                pool.token_b_reserve = pool.token_b_reserve.plus(b);
+
+                return {
+                    pool_id: poolId,
+                    added_a: amountA,
+                    added_b: amountB,
+                    new_reserve_a: pool.token_a_reserve.toNumber(),
+                    new_reserve_b: pool.token_b_reserve.toNumber(),
+                    new_k: pool.k.toNumber()
+                };
+            }
+
+            get_pool_info(poolId) {
+                const pool = this.pools.get(poolId);
+                if (!pool) throw new Error(`Pool ${poolId} does not exist`);
+                return {
+                    pool_id: poolId,
+                    token_a: pool.tokenA_symbol,
+                    token_b: pool.tokenB_symbol,
+                    reserve_a: pool.token_a_reserve.toNumber(),
+                    reserve_b: pool.token_b_reserve.toNumber(),
+                    price_a_in_b: pool.price_a_in_b.toNumber(),
+                    price_b_in_a: pool.price_b_in_a.toNumber(),
+                    k: pool.k.toNumber(),
+                    fee_rate: pool.fee_rate.toNumber()
+                };
+            }
+
+            simulate_price_impact(poolId, tokenIn, amountIn) {
+                const original = this.get_pool_info(poolId);
+                const { amount_out, fee_amount } = this.get_swap_amount_out(poolId, tokenIn, amountIn);
+                const pool = this.pools.get(poolId);
+
+                let hypotheticalA = pool.token_a_reserve.clone();
+                let hypotheticalB = pool.token_b_reserve.clone();
+
+                if (tokenIn === pool.tokenA_symbol) {
+                    hypotheticalA = hypotheticalA.plus(new Decimal(amountIn));
+                    hypotheticalB = hypotheticalB.minus(amount_out);
+                } else {
+                    hypotheticalB = hypotheticalB.plus(new Decimal(amountIn));
+                    hypotheticalA = hypotheticalA.minus(amount_out);
+                }
+
+                const new_price_a_in_b = hypotheticalA.eq(0)
+                    ? new Decimal(0)
+                    : hypotheticalB.div(hypotheticalA);
+                const new_price_b_in_a = hypotheticalB.eq(0)
+                    ? new Decimal(0)
+                    : hypotheticalA.div(hypotheticalB);
+
+                let price_impact;
+                if (tokenIn === original.token_a) {
+                    price_impact = new_price_a_in_b
+                        .minus(new Decimal(original.price_a_in_b))
+                        .div(new Decimal(original.price_a_in_b));
+                } else {
+                    price_impact = new_price_b_in_a
+                        .minus(new Decimal(original.price_b_in_a))
+                        .div(new Decimal(original.price_b_in_a));
+                }
+
+                return {
+                    amount_out: amount_out.toNumber(),
+                    fee: fee_amount.toNumber(),
+                    price_impact_percent: price_impact.mul(100).toNumber(),
+                    new_price_a_in_b: new_price_a_in_b.toNumber(),
+                    new_price_b_in_a: new_price_b_in_a.toNumber()
+                };
+            }
+
+            get_ecosystem_token_prices() {
+                const prices = { USDC: new Decimal(1) };
+                for (const pool of this.pools.values()) {
+                    if (pool.tokenB_symbol === "USDC") {
+                        prices[pool.tokenA_symbol] = pool.price_a_in_b;
+                    } else if (pool.tokenA_symbol === "USDC") {
+                        prices[pool.tokenB_symbol] = pool.price_b_in_a;
+                    }
+                }
+                let foundNew = true;
+                while (foundNew) {
+                    foundNew = false;
+                    for (const pool of this.pools.values()) {
+                        const { tokenA_symbol: A, tokenB_symbol: B } = pool;
+                        if (!(A in prices) && B in prices) {
+                            prices[A] = pool.price_a_in_b.mul(prices[B]);
+                            foundNew = true;
+                        } else if (!(B in prices) && A in prices) {
+                            prices[B] = pool.price_b_in_a.mul(prices[A]);
+                            foundNew = true;
+                        }
+                    }
+                }
+                return Object.fromEntries(
+                    Object.entries(prices).map(([tk, dec]) => [tk, dec.toNumber()])
+                );
+            }
+        }
+
+        class RewardCalculator {
+            static ARBITRAGE_THRESHOLD_PERCENT = 0.5;
+
+            constructor(amm) {
+                this.amm = amm;
+            }
+
+            calculate_lp_rewards(poolId, userLiquidityPercent, timePeriodDays = 30) {
+                if (!this.amm.pools.has(poolId)) {
+                    throw new Error(`Pool ${poolId} does not exist`);
+                }
+                if (userLiquidityPercent < 0 || userLiquidityPercent > 100) {
+                    throw new Error("Liquidity percentage must be between 0 and 100.");
+                }
+
+                const poolInfo = this.amm.get_pool_info(poolId);
+                const tokenPrices = this.amm.get_ecosystem_token_prices();
+
+                const priceA = tokenPrices[poolInfo.token_a] || 0;
+                const priceB = tokenPrices[poolInfo.token_b] || 0;
+
+                const reserveAVal = poolInfo.reserve_a * priceA;
+                const reserveBVal = poolInfo.reserve_b * priceB;
+                const totalPoolValue = reserveAVal + reserveBVal;
+
+                if (totalPoolValue <= 0) {
+                    return {
+                        user_liquidity_value: 0,
+                        estimated_daily_volume: 0,
+                        daily_fees_generated: 0,
+                        user_daily_fee_share: 0,
+                        user_period_rewards: 0,
+                        estimated_apy: 0,
+                        roi_percent: 0,
+                        time_period_days: timePeriodDays
+                    };
+                }
+
+                const dailyVolume = totalPoolValue * 0.05;
+                const dailyFees = dailyVolume * this.amm.pools.get(poolId).fee_rate.toNumber();
+                const periodFees = dailyFees * timePeriodDays;
+                const userFeeShare = periodFees * (userLiquidityPercent / 100);
+                const userLiquidityValue = totalPoolValue * (userLiquidityPercent / 100);
+                const annualFees = dailyFees * 365 * (userLiquidityPercent / 100);
+                const apy = userLiquidityValue > 0 ? (annualFees / userLiquidityValue) * 100 * 30 : 0;
+                const roi = userLiquidityValue > 0 ? (userFeeShare / userLiquidityValue) * 100 : 0;
+
+                return {
+                    user_liquidity_value: userLiquidityValue,
+                    estimated_daily_volume: dailyVolume,
+                    daily_fees_generated: dailyFees,
+                    user_daily_fee_share: dailyFees * (userLiquidityPercent / 100),
+                    user_period_rewards: userFeeShare,
+                    estimated_apy: apy,
+                    roi_percent: roi,
+                    time_period_days: timePeriodDays
+                };
+            }
+
+            calculate_arbitrage_opportunity(poolId, externalPrice, tokenSymbol) {
+                const poolInfo = this.amm.get_pool_info(poolId);
+                if (!TOKEN_SYMBOLS.includes(tokenSymbol)) {
+                    throw new Error(`Invalid token symbol: ${tokenSymbol}`);
+                }
+
+                let poolPrice = 0;
+                let otherToken;
+                if (tokenSymbol === poolInfo.token_a) {
+                    poolPrice = poolInfo.price_a_in_b;
+                    otherToken = poolInfo.token_b;
+                } else if (tokenSymbol === poolInfo.token_b) {
+                    poolPrice = poolInfo.price_b_in_a;
+                    otherToken = poolInfo.token_a;
+                } else {
+                    throw new Error(`Token ${tokenSymbol} not in pool ${poolId}`);
+                }
+
+                if (poolPrice === 0) {
+                    return {
+                        pool_price: 0,
+                        external_price: externalPrice,
+                        price_difference: 0,
+                        price_difference_percent: 0,
+                        arbitrage_opportunity: false,
+                        optimal_arbitrage_amount: 0,
+                        estimated_profit: 0
+                    };
+                }
+
+                const diff = externalPrice - poolPrice;
+                const diffPct = (diff / poolPrice) * 100;
+                let optimal = 0;
+                let profit = 0;
+
+                if (Math.abs(diffPct) > RewardCalculator.ARBITRAGE_THRESHOLD_PERCENT) {
+                    const pool = this.amm.pools.get(poolId);
+                    const resIn = tokenSymbol === poolInfo.token_a ? pool.token_a_reserve : pool.token_b_reserve;
+                    optimal = resIn.mul(0.01).toNumber();
+                    profit = Math.abs(diff) * optimal;
+                }
+
+                return {
+                    pool_price: poolPrice,
+                    external_price: externalPrice,
+                    price_difference: diff,
+                    price_difference_percent: diffPct,
+                    arbitrage_opportunity: Math.abs(diffPct) > RewardCalculator.ARBITRAGE_THRESHOLD_PERCENT,
+                    optimal_arbitrage_amount: optimal,
+                    estimated_profit: profit
+                };
+            }
+        }
+
+        // UI Management
+        const amm = new HISAAMM();
+        const calculator = new RewardCalculator(amm);
+
+        // DOM Elements
+        const poolSelect = document.getElementById('pool-select');
+        const tokenAReserveEl = document.getElementById('token-a-reserve');
+        const tokenBReserveEl = document.getElementById('token-b-reserve');
+        const tokenANameEl = document.getElementById('token-a-name');
+        const tokenBNameEl = document.getElementById('token-b-name');
+        const kValueEl = document.getElementById('k-value');
+        const kFormulaText = document.getElementById('k-formula-text');
+        const inputTokenEl = document.getElementById('input-token');
+        const outputTokenEl = document.getElementById('output-token');
+        const inputAmountEl = document.getElementById('input-amount');
+        const outputAmountEl = document.getElementById('output-amount');
+        const swapBtn = document.getElementById('swap-btn');
+        const liquidityAmountA = document.getElementById('liquidity-amount-a');
+        const liquidityAmountB = document.getElementById('liquidity-amount-b');
+        const addLiquidityBtn = document.getElementById('add-liquidity-btn');
+        const liquidityOutput = document.getElementById('liquidity-output');
+        const lpPercent = document.getElementById('lp-percent');
+        const lpDays = document.getElementById('lp-days');
+        const calculateRewardsBtn = document.getElementById('calculate-rewards-btn');
+        const arbitrageToken = document.getElementById('arbitrage-token');
+        const externalPrice = document.getElementById('external-price');
+        const calculateArbitrageBtn = document.getElementById('calculate-arbitrage-btn');
+        const impactToken = document.getElementById('impact-token');
+        const impactAmount = document.getElementById('impact-amount');
+        const calculateImpactBtn = document.getElementById('calculate-impact-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const priceChartTitle = document.getElementById('price-chart-title');
+        const priceTokenA = document.getElementById('price-token-a');
+        const priceTokenB = document.getElementById('price-token-b');
+        const currentPriceEl = document.getElementById('current-price');
+        const ecosystemDisplay = document.getElementById('ecosystem-display');
+        const pricesTable = document.getElementById('prices-table');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Initialize UI
+        function initUI() {
+            // Populate pool select
+            const poolOptions = Array.from(amm.pools.keys()).map(pool_id => 
+                `<option value="${pool_id}">${pool_id}</option>`
+            );
+            poolSelect.innerHTML = poolOptions.join('');
+
+            // Populate token selects
+            [inputTokenEl, outputTokenEl, arbitrageToken, impactToken].forEach(select => {
+                select.innerHTML = TOKEN_SYMBOLS.map(token => 
+                    `<option value="${token}">${token}</option>`
+                ).join('');
+            });
+
+            // Display ecosystem overview
+            ecosystemDisplay.innerHTML = Object.values(amm.ecosystems)
+                .map(eco => eco.display())
+                .join('');
+
+            // Initialize tabs
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                });
+            });
+
+            updatePoolDisplay();
+            updatePricesDisplay();
+            calculateOutput();
+        }
+
+        function updatePoolDisplay() {
+            const pool_id = poolSelect.value;
+            const pool_info = amm.get_pool_info(pool_id);
+            tokenANameEl.textContent = pool_info.token_a;
+            tokenBNameEl.textContent = pool_info.token_b;
+            tokenAReserveEl.textContent = pool_info.reserve_a.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            tokenBReserveEl.textContent = pool_info.reserve_b.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            kValueEl.textContent = pool_info.k.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            kFormulaText.textContent = `${pool_info.token_a} Reserve × ${pool_info.token_b} Reserve = k (Constant)`;
+            priceChartTitle.textContent = `${pool_info.token_a}/${pool_info.token_b} Price Relationship`;
+            priceTokenA.textContent = pool_info.token_a;
+            priceTokenB.textContent = pool_info.token_b;
+            currentPriceEl.textContent = pool_info.price_a_in_b.toFixed(6);
+
+            // Update swap token selectors
+            inputTokenEl.innerHTML = `
+                <option value="${pool_info.token_a}">${pool_info.token_a}</option>
+                <option value="${pool_info.token_b}">${pool_info.token_b}</option>
+            `;
+            outputTokenEl.innerHTML = `
+                <option value="${pool_info.token_b}">${pool_info.token_b}</option>
+                <option value="${pool_info.token_a}">${pool_info.token_a}</option>
+            `;
+        }
+
+        function updatePricesDisplay() {
+            const prices = amm.get_ecosystem_token_prices();
+            let html = '<tr><th>Token</th><th>Price (USDC)</th></tr>';
+            for (const [token, price] of Object.entries(prices)) {
+                html += `<tr><td>${token}</td><td class="highlight">${price.toFixed(6)}</td></tr>`;
+            }
+            pricesTable.innerHTML = html;
+        }
+
+        function calculateOutput() {
+            const pool_id = poolSelect.value;
+            const inputAmount = parseFloat(inputAmountEl.value) || 0;
+            if (inputAmount <= 0) {
+                outputAmountEl.textContent = `0 ${outputTokenEl.value}`;
+                return;
+            }
+            try {
+                const { amount_out, token_out } = amm.get_swap_amount_out(pool_id, inputTokenEl.value, inputAmount);
+                outputAmountEl.innerHTML = `<span class="highlight">${amount_out.toFixed(6)}</span> ${token_out}`;
+            } catch (error) {
+                outputAmountEl.textContent = `0 ${outputTokenEl.value}`;
+                alert(error.message);
+            }
+        }
+
+        function executeSwap() {
+            const pool_id = poolSelect.value;
+            const inputAmount = parseFloat(inputAmountEl.value) || 0;
+            if (inputAmount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            try {
+                const result = amm.execute_swap(pool_id, inputTokenEl.value, inputAmount);
+                updatePoolDisplay();
+                updatePricesDisplay();
+                calculateOutput();
+                alert(`Swap executed: <span class="highlight">${inputAmount.toFixed(6)}</span> ${result.token_in} for <span class="highlight">${result.amount_out.toFixed(6)}</span> ${result.token_out}`);
+                swapBtn.classList.add('pulse');
+                setTimeout(() => swapBtn.classList.remove('pulse'), 500);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function addLiquidity() {
+            const pool_id = poolSelect.value;
+            const amount_a = parseFloat(liquidityAmountA.value) || 0;
+            const amount_b = parseFloat(liquidityAmountB.value) || 0;
+            try {
+                const result = amm.add_liquidity(pool_id, amount_a, amount_b);
+                updatePoolDisplay();
+                updatePricesDisplay();
+                calculateOutput();
+                liquidityOutput.innerHTML = `Added <span class="highlight">${amount_a.toFixed(2)}</span> ${result.pool_id.split('-')[0]} and <span class="highlight">${amount_b.toFixed(2)}</span> ${result.pool_id.split('-')[1]}`;
+            } catch (error) {
+                liquidityOutput.textContent = error.message;
+            }
+        }
+
+        function calculateRewards() {
+            const pool_id = poolSelect.value;
+            const percent = parseFloat(lpPercent.value) || 0;
+            const days = parseInt(lpDays.value) || 30;
+            try {
+                const result = calculator.calculate_lp_rewards(pool_id, percent, days);
+                document.getElementById('rewards-liquidity').innerHTML = `<span class="highlight">$${result.user_liquidity_value.toFixed(2)}</span>`;
+                document.getElementById('rewards-volume').innerHTML = `<span class="highlight">$${result.estimated_daily_volume.toFixed(2)}</span>`;
+                document.getElementById('rewards-fees').innerHTML = `<span class="highlight">$${result.daily_fees_generated.toFixed(2)}</span>`;
+                document.getElementById('rewards-share').innerHTML = `<span class="highlight">$${result.user_daily_fee_share.toFixed(2)}</span>`;
+                document.getElementById('rewards-period').innerHTML = `<span class="highlight">$${result.user_period_rewards.toFixed(2)}</span>`;
+                document.getElementById('rewards-apy').innerHTML = `<span class="highlight">${result.estimated_apy.toFixed(2)}%</span>`;
+                document.getElementById('rewards-roi').innerHTML = `<span class="highlight">${result.roi_percent.toFixed(2)}%</span>`;
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function calculateArbitrage() {
+            const pool_id = poolSelect.value;
+            const token = arbitrageToken.value;
+            const price = parseFloat(externalPrice.value) || 0;
+            try {
+                const result = calculator.calculate_arbitrage_opportunity(pool_id, price, token);
+                document.getElementById('arbitrage-pool-price').innerHTML = `<span class="highlight">${result.pool_price.toFixed(6)}</span>`;
+                document.getElementById('arbitrage-external-price').innerHTML = `<span class="highlight">${result.external_price.toFixed(6)}</span>`;
+                document.getElementById('arbitrage-diff').innerHTML = `<span class="highlight">${result.price_difference.toFixed(6)}</span>`;
+                document.getElementById('arbitrage-diff-percent').innerHTML = `<span class="highlight">${result.price_difference_percent.toFixed(2)}%</span>`;
+                document.getElementById('arbitrage-opportunity').innerHTML = result.arbitrage_opportunity ? 
+                    `<span class="highlight">Yes</span>` : 'No';
+                document.getElementById('arbitrage-amount').innerHTML = `<span class="highlight">${result.optimal_arbitrage_amount.toFixed(2)}</span>`;
+                document.getElementById('arbitrage-profit').innerHTML = `<span class="highlight">$${result.estimated_profit.toFixed(2)}</span>`;
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function calculatePriceImpact() {
+            const pool_id = poolSelect.value;
+            const token = impactToken.value;
+            const amount = parseFloat(impactAmount.value) || 0;
+            try {
+                const result = amm.simulate_price_impact(pool_id, token, amount);
+                document.getElementById('impact-amount-out').innerHTML = `<span class="highlight">${result.amount_out.toFixed(6)}</span>`;
+                document.getElementById('impact-fee').innerHTML = `<span class="highlight">${result.fee.toFixed(6)}</span>`;
+                document.getElementById('impact-percent').innerHTML = `<span class="highlight">${result.price_impact_percent.toFixed(2)}%</span>`;
+                document.getElementById('impact-price-a').innerHTML = `<span class="highlight">${result.new_price_a_in_b.toFixed(6)}</span>`;
+                document.getElementById('impact-price-b').innerHTML = `<span class="highlight">${result.new_price_b_in_a.toFixed(6)}</span>`;
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function resetPools() {
+            try {
+                amm.reset_pools();
+                updatePoolDisplay();
+                updatePricesDisplay();
+                calculateOutput();
+                liquidityOutput.textContent = 'Enter amounts to see result';
+                document.getElementById('rewards-result').querySelectorAll('td').forEach(td => td.innerHTML = td.id.includes('apy') || td.id.includes('roi') ? '0%' : '$0');
+                document.getElementById('arbitrage-result').querySelectorAll('td').forEach(td => td.innerHTML = td.id.includes('opportunity') ? 'No' : td.id.includes('percent') ? '0%' : '0');
+                document.getElementById('impact-result').querySelectorAll('td').forEach(td => td.innerHTML = td.id.includes('percent') ? '0%' : '0');
+                alert('Pools reset to initial state');
+                resetBtn.classList.add('pulse');
+                setTimeout(() => resetBtn.classList.remove('pulse'), 500);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // Event Listeners
+        poolSelect.addEventListener('change', () => {
+            updatePoolDisplay();
+            calculateOutput();
+        });
+
+        inputTokenEl.addEventListener('change', () => {
+            outputTokenEl.value = inputTokenEl.value === amm.pools.get(poolSelect.value).tokenA_symbol 
+                ? amm.pools.get(poolSelect.value).tokenB_symbol 
+                : amm.pools.get(poolSelect.value).tokenA_symbol;
+            calculateOutput();
+        });
+
+        outputTokenEl.addEventListener('change', () => {
+            inputTokenEl.value = outputTokenEl.value === amm.pools.get(poolSelect.value).tokenA_symbol 
+                ? amm.pools.get(poolSelect.value).tokenB_symbol 
+                : amm.pools.get(poolSelect.value).tokenA_symbol;
+            calculateOutput();
+        });
+
+        inputAmountEl.addEventListener('input', calculateOutput);
+        swapBtn.addEventListener('click', executeSwap);
+        addLiquidityBtn.addEventListener('click', addLiquidity);
+        calculateRewardsBtn.addEventListener('click', calculateRewards);
+        calculateArbitrageBtn.addEventListener('click', calculateArbitrage);
+        calculateImpactBtn.addEventListener('click', calculatePriceImpact);
+        resetBtn.addEventListener('click', resetPools);
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', initUI);
+    </script>
+</body>
+</html>

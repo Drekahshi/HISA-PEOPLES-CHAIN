@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HISA Ecosystem - Pool Visualization</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a2332 50%, #2d3748 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff94, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: #a0aec0;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .ecosystem-container {
+            position: relative;
+            width: 100%;
+            height: 75vh;
+            overflow: hidden;
+            background: rgba(10, 15, 25, 0.4);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .pools-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+        }
+
+        .pool {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            overflow: hidden;
+            will-change: transform;
+        }
+
+        .pool::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .pool:hover {
+            transform: scale(1.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.3);
+            border-color: #00ff94;
+            z-index: 20;
+        }
+
+        .pool-glow {
+            animation: glow 2s ease-in-out infinite;
+            border-color: #00d4ff;
+        }
+
+        .pool-content {
+            text-align: center;
+            padding: 1rem;
+            z-index: 2;
+        }
+
+        .pool-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .pool-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+        }
+
+        .pool-type {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pool.large { width: 140px; height: 140px; }
+        .pool.medium { width: 110px; height: 110px; }
+        .pool.small { width: 90px; height: 90px; }
+
+        .pool.foundation { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3)); border-color: #6366f1; }
+        .pool.value-creation { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3)); border-color: #10b981; }
+        .pool.impact { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3)); border-color: #f59e0b; }
+        .pool.synergy { background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.3)); border-color: #ec4899; }
+
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 2;
+            opacity: 0.6;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .info-panel {
+            position: fixed;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            width: 300px;
+            background: rgba(10, 15, 25, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .info-panel.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .info-panel h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #00d4ff;
+        }
+
+        .info-panel p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #cbd5e0;
+            margin-bottom: 1rem;
+        }
+
+        .info-panel .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1rem;
+        }
+
+        .info-panel .stat-item {
+            text-align: center;
+        }
+
+        .info-panel .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00ff94;
+        }
+
+        .info-panel .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .stats-panel {
+            position: absolute;
+            top: 120px;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 40;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ecosystem-description {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .ecosystem-description h2 {
+            margin-bottom: 15px;
+            color: #00ff94;
+            font-weight: 600;
+        }
+
+        .ecosystem-description p {
+            line-height: 1.7;
+            margin-bottom: 15px;
+            color: #cbd5e0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(0, 212, 255, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(0, 212, 255, 0.5); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .stats-panel { position: relative; top: auto; right: auto; margin: 1rem; }
+            .pools-container { padding: 1rem; }
+            .ecosystem-container { height: 65vh; }
+            .info-panel {
+                top: auto;
+                left: 0;
+                bottom: 20px;
+                transform: translateY(0);
+                width: 100%;
+                border-radius: 20px 20px 0 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">HISA ECOSYSTEM</h1>
+            <p class="subtitle">Ubuntu Meets Blockchain - Interactive Pool Architecture Visualization</p>
+        </header>
+
+        <div class="ecosystem-description">
+            <h2>Holistic Integrated Sustainable Architecture</h2>
+            <p>The HISA ecosystem integrates environmental conservation, cultural heritage, economic empowerment, and governance through a network of interconnected liquidity pools. This visualization shows how the 28 core pools interact to create a regenerative economic system.</p>
+        </div>
+
+        <div class="ecosystem-container">
+            <div class="pools-container" id="poolsContainer"></div>
+            <svg class="connections" id="connectionsSvg"></svg>
+        </div>
+
+        <div class="info-panel" id="infoPanel"></div>
+
+        <div class="stats-panel">
+            <div class="stat-item">
+                <span class="stat-value" id="totalPools">28</span>
+                <span class="stat-label">Active Pools</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="totalConnections">57</span>
+                <span class="stat-label">Synergies</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="totalTokens">4</span>
+                <span class="stat-label">Ecosystem Tokens</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pool data configuration
+        const poolsData = [
+            // Foundation Pools
+            {
+                id: 'ubuntu-stability',
+                name: 'Ubuntu Stability Pool',
+                type: 'Foundation',
+                icon: '⚖️',
+                size: 'large',
+                category: 'foundation',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Maintains system-wide economic stability and prevents volatility through diversified reserves and automated market interventions.',
+                tvl: '$2.5M',
+                apy: '8-12%',
+                highlight: true
+            },
+            {
+                id: 'governance',
+                name: 'Governance Pool',
+                type: 'Foundation',
+                icon: '🏛️',
+                size: 'large',
+                category: 'foundation',
+                tokens: ['HISA'],
+                description: 'Enables cross-community decision-making and democratic governance across the HISA ecosystem.',
+                tvl: '$1.8M',
+                apy: '6-10%'
+            },
+            {
+                id: 'emergency-response',
+                name: 'Emergency Response Pool',
+                type: 'Foundation',
+                icon: '🚨',
+                size: 'medium',
+                category: 'foundation',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Crisis management and antifragile recovery mechanisms for system-wide resilience.',
+                tvl: '$800K',
+                apy: '5-8%'
+            },
+            {
+                id: 'security-core',
+                name: 'Security Core Pool',
+                type: 'Foundation',
+                icon: '🔐',
+                size: 'medium',
+                category: 'foundation',
+                tokens: ['HISA'],
+                description: 'Ensures ecosystem security through advanced encryption and decentralized validation.',
+                tvl: '$1.0M',
+                apy: '7-10%'
+            },
+            {
+                id: 'infrastructure-support',
+                name: 'Infrastructure Support Pool',
+                type: 'Foundation',
+                icon: '🏗️',
+                size: 'medium',
+                category: 'foundation',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Funds scalable blockchain infrastructure for ecosystem reliability.',
+                tvl: '$1.2M',
+                apy: '6-9%'
+            },
+            {
+                id: 'protocol-upgrade',
+                name: 'Protocol Upgrade Pool',
+                type: 'Foundation',
+                icon: '⚙️',
+                size: 'small',
+                category: 'foundation',
+                tokens: ['HISA'],
+                description: 'Supports continuous protocol enhancements and system upgrades.',
+                tvl: '$700K',
+                apy: '5-8%'
+            },
+
+            // Value Creation Pools
+            {
+                id: 'multi-token-liquidity',
+                name: 'Multi-Token Liquidity Pool',
+                type: 'Value Creation',
+                icon: '💧',
+                size: 'large',
+                category: 'value-creation',
+                tokens: ['HISA', 'JANI', 'CHAT', 'UMOJA'],
+                description: 'Provides liquidity for all ecosystem tokens with intelligent AMM optimization.',
+                tvl: '$4.2M',
+                apy: '12-18%'
+            },
+            {
+                id: 'staking-rewards',
+                name: 'Staking Rewards Pool',
+                type: 'Value Creation',
+                icon: '🔒',
+                size: 'medium',
+                category: 'value-creation',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Long-term value accumulation through time-weighted staking mechanisms.',
+                tvl: '$3.1M',
+                apy: '10-15%'
+            },
+            {
+                id: 'cross-chain-bridge',
+                name: 'Cross-Chain Bridge Pool',
+                type: 'Value Creation',
+                icon: '🌉',
+                size: 'medium',
+                category: 'value-creation',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Enables global accessibility and interoperability across blockchain networks.',
+                tvl: '$1.9M',
+                apy: '8-14%'
+            },
+            {
+                id: 'defi-yield',
+                name: 'DeFi Yield Pool',
+                type: 'Value Creation',
+                icon: '📈',
+                size: 'medium',
+                category: 'value-creation',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Optimizes yield farming strategies across DeFi protocols.',
+                tvl: '$2.0M',
+                apy: '14-20%'
+            },
+            {
+                id: 'nft-market',
+                name: 'NFT Market Pool',
+                type: 'Value Creation',
+                icon: '🖼️',
+                size: 'small',
+                category: 'value-creation',
+                tokens: ['CHAT', 'UMOJA'],
+                description: 'Facilitates trading and liquidity for cultural NFTs.',
+                tvl: '$900K',
+                apy: '10-16%'
+            },
+            {
+                id: 'tokenized-assets',
+                name: 'Tokenized Assets Pool',
+                type: 'Value Creation',
+                icon: '🏠',
+                size: 'medium',
+                category: 'value-creation',
+                tokens: ['UMOJA'],
+                description: 'Enables tokenization of real-world assets for liquidity.',
+                tvl: '$1.5M',
+                apy: '12-18%'
+            },
+
+            // Impact Pools
+            {
+                id: 'environmental-action',
+                name: 'Environmental Action Pool',
+                type: 'Impact',
+                icon: '🌳',
+                size: 'large',
+                category: 'impact',
+                tokens: ['JANI', 'HISA'],
+                description: 'Rewards conservation activities and climate action through Proof-of-Growth mechanisms.',
+                tvl: '$2.8M',
+                apy: '15-22%'
+            },
+            {
+                id: 'cultural-heritage',
+                name: 'Cultural Heritage Pool',
+                type: 'Impact',
+                icon: '🏺',
+                size: 'large',
+                category: 'impact',
+                tokens: ['CHAT', 'HISA'],
+                description: 'Preserves African cultural knowledge while creating economic value for communities.',
+                tvl: '$1.6M',
+                apy: '12-20%'
+            },
+            {
+                id: 'wealth-building',
+                name: 'Wealth Building Pool',
+                type: 'Impact',
+                icon: '💎',
+                size: 'large',
+                category: 'impact',
+                tokens: ['UMOJA', 'HISA'],
+                description: 'Democratizes access to investment opportunities through fractional ownership.',
+                tvl: '$5.4M',
+                apy: '18-25%'
+            },
+            {
+                id: 'education-fund',
+                name: 'Education Fund Pool',
+                type: 'Impact',
+                icon: '📚',
+                size: 'medium',
+                category: 'impact',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Funds educational initiatives for underprivileged communities.',
+                tvl: '$1.3M',
+                apy: '10-15%'
+            },
+            {
+                id: 'healthcare-access',
+                name: 'Healthcare Access Pool',
+                type: 'Impact',
+                icon: '🏥',
+                size: 'medium',
+                category: 'impact',
+                tokens: ['HISA'],
+                description: 'Supports decentralized healthcare funding and access.',
+                tvl: '$1.1M',
+                apy: '9-14%'
+            },
+            {
+                id: 'renewable-energy',
+                name: 'Renewable Energy Pool',
+                type: 'Impact',
+                icon: '☀️',
+                size: 'small',
+                category: 'impact',
+                tokens: ['JANI'],
+                description: 'Invests in renewable energy projects for sustainable growth.',
+                tvl: '$800K',
+                apy: '11-16%'
+            },
+
+            // Synergy Pools
+            {
+                id: 'financial-inclusion',
+                name: 'Financial Inclusion Pool',
+                type: 'Synergy',
+                icon: '📱',
+                size: 'medium',
+                category: 'synergy',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'USSD integration and mobile-first access for feature phone users.',
+                tvl: '$1.2M',
+                apy: '10-16%'
+            },
+            {
+                id: 'youth-empowerment',
+                name: 'Youth Empowerment Pool',
+                type: 'Synergy',
+                icon: '👥',
+                size: 'medium',
+                category: 'synergy',
+                tokens: ['HISA', 'JANI', 'CHAT'],
+                description: 'Addresses youth unemployment through digital economy participation.',
+                tvl: '$900K',
+                apy: '14-20%'
+            },
+            {
+                id: 'rural-urban-bridge',
+                name: 'Rural-Urban Bridge Pool',
+                type: 'Synergy',
+                icon: '🌾',
+                size: 'medium',
+                category: 'synergy',
+                tokens: ['UMOJA', 'JANI'],
+                description: 'Connects rural assets with urban capital markets through tokenization.',
+                tvl: '$1.1M',
+                apy: '12-18%'
+            },
+            {
+                id: 'cultural-environmental',
+                name: 'Cultural-Environmental Synergy',
+                type: 'Synergy',
+                icon: '🕊️',
+                size: 'medium',
+                category: 'synergy',
+                tokens: ['CHAT', 'JANI', 'HISA'],
+                description: 'Sacred grove conservation earning both cultural and environmental rewards.',
+                tvl: '$750K',
+                apy: '16-24%'
+            },
+            {
+                id: 'tech-adoption',
+                name: 'Tech Adoption Pool',
+                type: 'Synergy',
+                icon: '💻',
+                size: 'medium',
+                category: 'synergy',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Promotes blockchain technology adoption in underserved regions.',
+                tvl: '$950K',
+                apy: '11-17%'
+            },
+            {
+                id: 'community-innovation',
+                name: 'Community Innovation Pool',
+                type: 'Synergy',
+                icon: '💡',
+                size: 'small',
+                category: 'synergy',
+                tokens: ['HISA', 'CHAT'],
+                description: 'Funds community-driven innovation and startup incubators.',
+                tvl: '$600K',
+                apy: '13-19%'
+            },
+            {
+                id: 'global-partnerships',
+                name: 'Global Partnerships Pool',
+                type: 'Synergy',
+                icon: '🤝',
+                size: 'small',
+                category: 'synergy',
+                tokens: ['HISA', 'JANI'],
+                description: 'Fosters international collaborations for ecosystem growth.',
+                tvl: '$700K',
+                apy: '10-15%'
+            },
+
+            // Additional Strategic Pools
+            {
+                id: 'ai-risk-management',
+                name: 'AI Risk Management',
+                type: 'Foundation',
+                icon: '🤖',
+                size: 'small',
+                category: 'foundation',
+                tokens: ['HISA'],
+                description: 'AI-powered risk assessment and automated protection mechanisms.',
+                tvl: '$600K',
+                apy: '7-11%'
+            },
+            {
+                id: 'community-resilience',
+                name: 'Community Resilience',
+                type: 'Impact',
+                icon: '🛡️',
+                size: 'small',
+                category: 'impact',
+                tokens: ['HISA', 'UMOJA'],
+                description: 'Comprehensive insurance and mutual aid for ecosystem participants.',
+                tvl: '$450K',
+                apy: '6-9%'
+            },
+            {
+                id: 'diaspora-connection',
+                name: 'Diaspora Connection',
+                type: 'Synergy',
+                icon: '🌍',
+                size: 'small',
+                category: 'synergy',
+                tokens: ['HISA', 'CHAT', 'UMOJA'],
+                description: 'Bridges African diaspora with homeland investment opportunities.',
+                tvl: '$320K',
+                apy: '11-17%'
+            },
+            {
+                id: 'interoperability',
+                name: 'Interoperability Pool',
+                type: 'Value Creation',
+                icon: '🔗',
+                size: 'small',
+                category: 'value-creation',
+                tokens: ['HISA'],
+                description: 'Connects HISA ecosystem with global blockchain networks and standards.',
+                tvl: '$280K',
+                apy: '9-13%'
+            }
+        ];
+
+        // Initialize the visualization
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePools();
+            createConnections();
+            setupInfoPanel();
+            animateEntrance();
+        });
+
+        function initializePools() {
+            const container = document.getElementById('poolsContainer');
+            const containerRect = container.getBoundingClientRect();
+            const poolData = [];
+
+            poolsData.forEach((pool, index) => {
+                const poolElement = document.createElement('div');
+                let poolClasses = `pool ${pool.size} ${pool.category}`;
+                if (pool.highlight) {
+                    poolClasses += ' pool-glow';
+                }
+                
+                poolElement.className = poolClasses;
+                poolElement.id = pool.id;
+                poolElement.style.animationDelay = `${index * 0.1}s`;
+                poolElement.style.zIndex = Math.floor(Math.random() * 10) + 5;
+
+                poolElement.innerHTML = `
+                    <div class="pool-content">
+                        <span class="pool-icon">${pool.icon}</span>
+                        <div class="pool-name">${pool.name}</div>
+                        <div class="pool-type">${pool.type}</div>
+                    </div>
+                `;
+
+                container.appendChild(poolElement);
+
+                const poolSize = poolElement.getBoundingClientRect().width;
+                poolData.push({
+                    element: poolElement,
+                    size: poolSize,
+                    x: Math.random() * (containerRect.width - poolSize),
+                    y: Math.random() * (containerRect.height - poolSize),
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5
+                });
+            });
+
+            function animatePools() {
+                const containerRect = container.getBoundingClientRect();
+                poolData.forEach(pool => {
+                    pool.x += pool.vx;
+                    pool.y += pool.vy;
+
+                    if (pool.x + pool.size > containerRect.width || pool.x < 0) {
+                        pool.vx *= -1;
+                    }
+                    if (pool.y + pool.size > containerRect.height || pool.y < 0) {
+                        pool.vy *= -1;
+                    }
+
+                    pool.element.style.left = `${pool.x}px`;
+                    pool.element.style.top = `${pool.y}px`;
+                });
+
+                createConnections();
+                requestAnimationFrame(animatePools);
+            }
+
+            animatePools();
+        }
+
+        function setupInfoPanel() {
+            const infoPanel = document.getElementById('infoPanel');
+            const pools = document.querySelectorAll('.pool');
+
+            pools.forEach(poolElement => {
+                poolElement.addEventListener('mouseenter', () => {
+                    const pool = poolsData.find(p => p.id === poolElement.id);
+                    if (pool) {
+                        infoPanel.innerHTML = `
+                            <h3>${pool.icon} ${pool.name}</h3>
+                            <p>${pool.description}</p>
+                            <div class="stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">${pool.tvl}</span>
+                                    <span class="stat-label">TVL</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">${pool.apy}</span>
+                                    <span class="stat-label">APY</span>
+                                </div>
+                            </div>
+                        `;
+                        infoPanel.classList.add('visible');
+                    }
+                });
+                
+                poolElement.addEventListener('mouseleave', () => {
+                    infoPanel.classList.remove('visible');
+                });
+            });
+        }
+
+        function createConnections() {
+            const svg = document.getElementById('connectionsSvg');
+            svg.innerHTML = '';
+            const connections = [
+                ['ubuntu-stability', 'multi-token-liquidity'],
+                ['governance', 'financial-inclusion'],
+                ['environmental-action', 'cultural-environmental'],
+                ['cultural-heritage', 'cultural-environmental'],
+                ['wealth-building', 'rural-urban-bridge'],
+                ['multi-token-liquidity', 'staking-rewards'],
+                ['youth-empowerment', 'cultural-heritage'],
+                ['diaspora-connection', 'cultural-heritage'],
+                ['cross-chain-bridge', 'interoperability'],
+                ['ai-risk-management', 'emergency-response'],
+                ['emergency-response', 'community-resilience'],
+                ['financial-inclusion', 'wealth-building'],
+                ['rural-urban-bridge', 'environmental-action'],
+                ['cultural-environmental', 'diaspora-connection'],
+                ['interoperability', 'governance'],
+                ['security-core', 'ubuntu-stability'],
+                ['infrastructure-support', 'governance'],
+                ['protocol-upgrade', 'ai-risk-management'],
+                ['defi-yield', 'multi-token-liquidity'],
+                ['nft-market', 'cultural-heritage'],
+                ['tokenized-assets', 'wealth-building'],
+                ['education-fund', 'wealth-building'],
+                ['healthcare-access', 'community-resilience'],
+                ['renewable-energy', 'environmental-action'],
+                ['tech-adoption', 'financial-inclusion'],
+                ['community-innovation', 'youth-empowerment'],
+                ['global-partnerships', 'interoperability']
+            ];
+
+            connections.forEach(([pool1Id, pool2Id]) => {
+                const pool1 = document.getElementById(pool1Id);
+                const pool2 = document.getElementById(pool2Id);
+                
+                if (pool1 && pool2) {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    const rect1 = pool1.getBoundingClientRect();
+                    const rect2 = pool2.getBoundingClientRect();
+                    const containerRect = svg.getBoundingClientRect();
+                    
+                    const x1 = rect1.left + rect1.width/2 - containerRect.left;
+                    const y1 = rect1.top + rect1.height/2 - containerRect.top;
+                    const x2 = rect2.left + rect2.width/2 - containerRect.left;
+                    const y2 = rect2.top + rect2.height/2 - containerRect.top;
+                    
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                    line.className = 'connection-line';
+                    line.style.stroke = getRandomConnectionColor();
+                    
+                    svg.appendChild(line);
+                }
+            });
+        }
+
+        function getRandomConnectionColor() {
+            const colors = [
+                'rgba(0, 212, 255, 0.3)',
+                'rgba(0, 255, 148, 0.3)',
+                'rgba(255, 237, 78, 0.3)',
+                'rgba(236, 72, 153, 0.3)',
+                'rgba(139, 92, 246, 0.3)'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function animateEntrance() {
+            // Placeholder for future entrance animation logic
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HISA PEOPLES CHAIN</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #f28c38; /* Tangerine orange */
+      --secondary: #8b5a2b; /* Darker tangerine shade */
+      --accent: #00c853; /* Green for contrast */
+      --light: #fff3e0; /* Light orange tint */
+      --dark: #3e2723; /* Deep brown for text */
+      --text: #3e2723; /* Deep brown */
+      --text-light: #6d4c41; /* Lighter brown for secondary text */
+      --border: #ffccbc; /* Soft peach border */
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+      padding-bottom: 80px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      color: var(--secondary);
+      margin-bottom: 5px;
+    }
+    
+    .subtitle {
+      color: var(--text-light);
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+    
+    .profile div p {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    
+    .profile div small {
+      color: var(--text-light);
+      font-size: 12px;
+    }
+    
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    
+    .btn-primary:hover {
+      background: #ef6c00;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(242, 140, 56, 0.1);
+    }
+    
+    /* Wallet Section */
+    .wallet {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+    
+    .wallet h2 {
+      margin-bottom: 20px;
+      color: var(--secondary);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .wallet h2 i {
+      color: var(--accent);
+    }
+    
+    .wallet-card {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius);
+      padding: 25px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .wallet-card::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    
+    .wallet-card p {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+    
+    .wallet-card strong {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    #usdBalance {
+      font-size: 22px;
+      opacity: 0.9;
+    }
+    
+    #countdown {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    
+    /* Swap Section */
+    .swap {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+    
+    .swap h2 {
+      margin-bottom: 20px;
+      color: var(--secondary);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .swap h2 i {
+      color: var(--primary);
+    }
+    
+    .swap-box {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    
+    .swap-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .swap-row select, .swap-row input {
+      flex: 1;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    
+    .flip-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0 auto;
+    }
+    
+    .flip-btn:hover {
+      transform: rotate(180deg);
+      background: var(--secondary);
+    }
+    
+    #conversionRate {
+      text-align: center;
+      font-weight: 500;
+      color: var(--text-light);
+      margin: 10px 0;
+    }
+    
+    .swap-btn {
+      background: var(--accent);
+      color: white;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      width: 100%;
+    }
+    
+    .swap-btn:hover {
+      background: #00b247;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    
+    /* Applications */
+    .apps {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+    
+    .apps h2 {
+      margin-bottom: 20px;
+      color: var(--secondary);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .apps h2 i {
+      color: var(--primary);
+    }
+    
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .app-card {
+      background: var(--light);
+      border-radius: var(--radius);
+      padding: 25px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid var(--border);
+    }
+    
+    .app-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+      border-color: var(--primary);
+    }
+    
+    .app-card i {
+      font-size: 32px;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    
+    .app-card h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    
+    .app-card small {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+    
+    /* Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 15px 0;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+      z-index: 100;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 15px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-item.active {
+      background: rgba(242, 140, 56, 0.1);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .nav-item i {
+      font-size: 20px;
+    }
+    
+    /* Notifications */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification i {
+      font-size: 24px;
+      color: var(--accent);
+    }
+    
+    /* Wallet Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: var(--radius);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    
+    .modal-content h3 {
+      color: var(--secondary);
+      margin-bottom: 20px;
+    }
+    
+    .wallet-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .wallet-btn {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--light);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .wallet-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .wallet-btn i {
+      font-size: 20px;
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+      
+      .profile {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .swap-row {
+        flex-direction: column;
+      }
+      
+      .wallet-card p {
+        font-size: 16px;
+      }
+      
+      .wallet-card strong {
+        font-size: 22px;
+      }
+    }
+    
+    /* Token Select Styling */
+    .token-select {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    
+    .token-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .token-logo.blue {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .token-logo.green {
+      background: var(--accent);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div>
+        <h1><i class="fas fa-exchange-alt"></i> HISA People Chain Protocol</h1>
+        <p class="subtitle">Empowering African Prosperity through Blockchain</p>
+      </div>
+      <div class="profile">
+        <img src="https://ui-avatars.com/api/?name=Hisa+User&background=f28c38&color=fff" alt="Avatar">
+        <div>
+          <p>@hisauser</p>
+          <small>Joined Aug 2025</small>
+        </div>
+        <button class="btn btn-outline" onclick="showWalletModal()">
+          <i class="fas fa-wallet"></i> Connect
+        </button>
+        <button class="btn btn-primary" onclick="shareLink()">
+          <i class="fas fa-share-alt"></i> Share
+        </button>
+      </div>
+    </header>
+
+    <!-- Wallet Modal -->
+    <div class="modal" id="walletModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeWalletModal()">&times;</span>
+        <h3>Connect Wallet</h3>
+        <div class="wallet-options">
+          <button class="wallet-btn" onclick="connectHashpack()">
+            <i class="fas fa-wallet"></i> Hashpack
+          </button>
+          <button class="wallet-btn" onclick="connectMetamask()">
+            <i class="fas fa-mask"></i> Metamask
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wallet -->
+    <section class="wallet">
+      <h2><i class="fas fa-wallet"></i> Wallet Overview</h2>
+      <div class="wallet-card">
+        <p>Balance: <strong>1,250.45 HISA</strong></p>
+        <p>≈ <span id="usdBalance">$6,450.00</span></p>
+        <p>Next Reward in: <span id="countdown">24:00:00</span></p>
+      </div>
+      <div style="display: flex; gap: 15px; margin-top: 20px;">
+        <button class="btn btn-primary" style="flex: 1;">
+          <i class="fas fa-plus"></i> Add Funds
+        </button>
+        <button class="btn btn-outline" style="flex: 1;">
+          <i class="fas fa-paper-plane"></i> Send
+        </button>
+      </div>
+    </section>
+
+    <!-- Swap -->
+    <section class="swap">
+      <h2><i class="fas fa-sync-alt"></i> Token Swap</h2>
+      <div class="swap-box">
+        <div class="swap-row">
+          <div class="token-select">
+            <div class="token-logo blue">H</div>
+            <select id="fromToken">
+              <option value="HISA">HISA</option>
+              <option value="JANI">JANI</option>
+              <option value="JANI Stable">JANI Stable</option>
+              <option value="UMOJA">UMOJA</option>
+              <option value="UMOJA Stable">UMOJA Stable</option>
+              <option value="UMOJA Option">UMOJA Option</option>
+              <option value="CULTURE">CULTURE</option>
+            </select>
+          </div>
+          <input type="number" placeholder="Amount" id="fromAmount" value="100">
+        </div>
+        
+        <button class="flip-btn" onclick="flipTokens()">
+          <i class="fas fa-exchange-alt"></i>
+        </button>
+        
+        <div class="swap-row">
+          <div class="token-select">
+            <div class="token-logo green">U</div>
+            <select id="toToken">
+              <option value="JANI">JANI</option>
+              <option value="HISA">HISA</option>
+              <option value="JANI Stable">JANI Stable</option>
+              <option value="UMOJA">UMOJA</option>
+              <option value="UMOJA Stable">UMOJA Stable</option>
+              <option value="UMOJA Option">UMOJA Option</option>
+              <option value="CULTURE">CULTURE</option>
+            </select>
+          </div>
+          <input type="number" placeholder="Amount" id="toAmount" value="520" readonly>
+        </div>
+        
+        <p id="conversionRate">Rate: 1 HISA = 5.20 JANI</p>
+        <button class="swap-btn" onclick="swapTokens()">
+          <i class="fas fa-exchange-alt"></i> Swap Tokens
+        </button>
+      </div>
+    </section>
+
+    <!-- Applications -->
+    <section class="apps">
+      <h2><i class="fas fa-th"></i> Apps</h2>
+      <div class="app-grid">
+        <div class="app-card">
+          <i class="fas fa-wallet"></i>
+          <h3>Wallets</h3>
+          <small>Swap, Pools, Manage</small>
+        </div>
+        <div class="app-card">
+          <i class="fas fa-chart-line"></i>
+          <h3>Positions</h3>
+          <small>Ideas, Ledger, Analytics</small>
+        </div>
+        <div class="app-card">
+          <i class="fas fa-coins"></i>
+          <h3>Tokens</h3>
+          <small>Manage, Explore, Trade</small>
+        </div>
+        <div class="app-card">
+          <i class="fas fa-comments"></i>
+          <h3>Forums</h3>
+          <small>Follow, Start, Discuss</small>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="wallet">
+      <h2><i class="fas fa-chart-pie"></i> Market Overview</h2>
+      <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+        <div style="flex: 1; min-width: 200px; background: #ffccbc; padding: 15px; border-radius: 10px;">
+          <p style="color: var(--text-light);">HISA Price</p>
+          <h3 style="color: var(--primary);">$5.16</h3>
+          <p style="color: #00c853; font-size: 14px;"><i class="fas fa-caret-up"></i> 2.4% (24h)</p>
+        </div>
+        <div style="flex: 1; min-width: 200px; background: #ffccbc; padding: 15px; border-radius: 10px;">
+          <p style="color: var(--text-light);">Market Cap</p>
+          <h3 style="color: var(--accent);">$1.2B</h3>
+          <p style="color: var(--text-light); font-size: 14px;">Rank #127</p>
+        </div>
+        <div style="flex: 1; min-width: 200px; background: #ffccbc; padding: 15px; border-radius: 10px;">
+          <p style="color: var(--text-light);">24h Volume</p>
+          <h3 style="color: #ef6c00;">$24.5M</h3>
+          <p style="color: var(--text-light); font-size: 14px;">+18.3% from yesterday</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <div>
+      <p id="notificationText">Link copied to clipboard!</p>
+      <small>Just paste it anywhere to share</small>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-wallet"></i>
+      <span>Wallet</span>
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-exchange-alt"></i>
+      <span>Swap</span>
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-paper-plane"></i>
+      <span>Send</span>
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-user"></i>
+      <span>Profile</span>
+    </div>
+  </nav>
+
+  <script>
+    // DOM Elements
+    const fromToken = document.getElementById('fromToken');
+    const toToken = document.getElementById('toToken');
+    const fromAmount = document.getElementById('fromAmount');
+    const toAmount = document.getElementById('toAmount');
+    const countdownEl = document.getElementById('countdown');
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notificationText');
+    const walletModal = document.getElementById('walletModal');
+    
+    // Token conversion rates
+    const conversionRates = {
+      'HISA': { 'JANI': 5.2, 'JANI Stable': 1.0, 'UMOJA': 2.5, 'UMOJA Stable': 1.0, 'UMOJA Option': 0.5, 'CULTURE': 3.0 },
+      'JANI': { 'HISA': 0.192, 'JANI Stable': 0.2, 'UMOJA': 0.48, 'UMOJA Stable': 0.2, 'UMOJA Option': 0.096, 'CULTURE': 0.576 },
+      'JANI Stable': { 'HISA': 1.0, 'JANI': 5.0, 'UMOJA': 2.5, 'UMOJA Stable': 1.0, 'UMOJA Option': 0.5, 'CULTURE': 3.0 },
+      'UMOJA': { 'HISA': 0.4, 'JANI': 2.083, 'JANI Stable': 0.4, 'UMOJA Stable': 0.4, 'UMOJA Option': 0.2, 'CULTURE': 1.2 },
+      'UMOJA Stable': { 'HISA': 1.0, 'JANI': 5.0, 'JANI Stable': 1.0, 'UMOJA': 2.5, 'UMOJA Option': 0.5, 'CULTURE': 3.0 },
+      'UMOJA Option': { 'HISA': 2.0, 'JANI': 10.416, 'JANI Stable': 2.0, 'UMOJA': 5.0, 'UMOJA Stable': 2.0, 'CULTURE': 6.0 },
+      'CULTURE': { 'HISA': 0.333, 'JANI': 1.736, 'JANI Stable': 0.333, 'UMOJA': 0.833, 'UMOJA Stable': 0.333, 'UMOJA Option': 0.167 }
+    };
+    
+    // Current conversion rate display
+    const conversionRateEl = document.getElementById('conversionRate');
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Start the countdown timer
+      startCountdown();
+      
+      // Set up swap functionality
+      setupSwap();
+      
+      // Add navigation item click handlers
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+          document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+    
+    // Set up swap functionality
+    function setupSwap() {
+      // Update conversion rate display
+      updateConversionRate();
+      
+      // When from amount changes, update to amount
+      fromAmount.addEventListener('input', updateToAmount);
+      
+      // When tokens change, update conversion rate and to amount
+      fromToken.addEventListener('change', () => {
+        updateConversionRate();
+        updateToAmount();
+      });
+      
+      toToken.addEventListener('change', () => {
+        updateConversionRate();
+        updateToAmount();
+      });
+    }
+    
+    // Update the conversion rate display
+    function updateConversionRate() {
+      const from = fromToken.value;
+      const to = toToken.value;
+      const rate = conversionRates[from][to];
+      conversionRateEl.textContent = `Rate: 1 ${from} = ${rate.toFixed(5)} ${to}`;
+    }
+    
+    // Update the to amount based on from amount
+    function updateToAmount() {
+      const from = fromToken.value;
+      const to = toToken.value;
+      const amount = parseFloat(fromAmount.value) || 0;
+      const rate = conversionRates[from][to];
+      toAmount.value = (amount * rate).toFixed(5);
+    }
+    
+    // Flip tokens
+    function flipTokens() {
+      const tempToken = fromToken.value;
+      fromToken.value = toToken.value;
+      toToken.value = tempToken;
+      
+      updateConversionRate();
+      updateToAmount();
+    }
+    
+    // Swap tokens function
+    function swapTokens() {
+      const from = fromToken.value;
+      const to = toToken.value;
+      const amount = parseFloat(fromAmount.value);
+      
+      if (!amount || amount <= 0) {
+        showNotification('Please enter a valid amount', 'error');
+        return;
+      }
+      
+      // Simulate swap
+      showNotification(`Swapped ${amount} ${from} to ${toAmount.value} ${to}`, 'success');
+      
+      // In a real app, this would call an API
+      setTimeout(() => {
+        showNotification('Transaction confirmed! Funds added to your wallet', 'success');
+      }, 1500);
+    }
+    
+    // Wallet connection functions
+    function showWalletModal() {
+      walletModal.style.display = 'flex';
+    }
+    
+    function closeWalletModal() {
+      walletModal.style.display = 'none';
+    }
+    
+    function connectHashpack() {
+      // Simulate Hashpack connection
+      showNotification('Connecting to Hashpack...', 'success');
+      setTimeout(() => {
+        showNotification('Connected to Hashpack successfully!', 'success');
+        closeWalletModal();
+      }, 1500);
+    }
+    
+    function connectMetamask() {
+      // Simulate Metamask connection
+      showNotification('Connecting to Metamask...', 'success');
+      setTimeout(() => {
+        showNotification('Connected to Metamask successfully!', 'success');
+        closeWalletModal();
+      }, 1500);
+    }
+    
+    // Share link function
+    function shareLink() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'HISA People Chain Protocol',
+          text: 'Check out HISA People Chain Protocol - Empowering African Prosperity through Blockchain',
+          url: window.location.href
+        })
+        .catch(error => showNotification('Error sharing: ' + error, 'error'));
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        showNotification('Link copied to clipboard!');
+      }
+    }
+    
+    // Show notification
+    function showNotification(message, type = 'success') {
+      notificationText.innerHTML = message;
+      notification.className = 'notification show';
+      
+      // Change icon based on type
+      const icon = notification.querySelector('i');
+      if (type === 'error') {
+        icon.className = 'fas fa-exclamation-circle';
+        icon.style.color = '#f44336';
+      } else {
+        icon.className = 'fas fa-check-circle';
+        icon.style.color = '#00c853';
+      }
+      
+      setTimeout(() => {
+        notification.className = 'notification';
+      }, 3000);
+    }
+    
+    // Start the countdown timer
+    function startCountdown() {
+      // Set to 24 hours from now
+      let countdownTime = 24 * 60 * 60; // 24 hours in seconds
+      
+      const timer = setInterval(() => {
+        countdownTime--;
+        
+        if (countdownTime <= 0) {
+          clearInterval(timer);
+          countdownEl.textContent = 'Reward available!';
+          showNotification('Your daily reward is ready! Claim it now.', 'success');
+          return;
+        }
+        
+        const hours = Math.floor(countdownTime / 3600);
+        const minutes = Math.floor((countdownTime % 3600) / 60);
+        const seconds = countdownTime % 60;
+        
+        countdownEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
