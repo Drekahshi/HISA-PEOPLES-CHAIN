@@ -1,4 +1,4 @@
-* ===== VARIABLES ===== */
+/* ===== VARIABLES ===== */
 :root {
   --primary-dark: #001220;
   --accent-green: #00c853;
@@ -139,6 +139,14 @@ h1, h2, h3, h4 {
     padding: 0;
 }
 
+/* Stretched image container for SDG */
+.hisa-image-container.stretched-image {
+    width: 100%;
+    max-width: 1200px;
+    height: 500px;
+    margin: 2rem auto;
+}
+
 .hisa-image-container img {
   width: 100%;
   height: 100%;
@@ -153,6 +161,14 @@ h1, h2, h3, h4 {
     object-fit: cover;
     border-radius: var(--border-radius);
     transition: var(--transition);
+}
+
+/* Stretched SDG image styles */
+.hisa-logo.stretched-sdg {
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    height: 100%;
 }
 
 .nav-container {
