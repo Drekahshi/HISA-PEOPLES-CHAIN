@@ -7,13 +7,13 @@
 
 > HISA PEOPLES CHAIN is a **grassroots movement** powered by a robust digital framework—connecting everyday Africans, **agentic AI**, and **blockchain** to address the 17 SDGs through **action, ownership, and reward**.
 
-- 🌳 *Tree planting*
-- 🧠 *Mental health support*
-- 🪢 *Cultural preservation*
+- 🌳 *conservation database*
+- 🧠 *Telemedicine and economic inclusion and empowerment*
+- 🪢 *Cultural database*
 
 This isn't just crypto. **It's a people-powered digital economy** that works on **any device**, even basic feature phones.
 
-> **"HISA" = Ownership**  
+> **"HISA" means  Ownership**  in swahili
 > Giving Africans control over data, culture, and financial future.
 
 ---
@@ -172,8 +172,62 @@ Not just a product—**a platform** for:
 https://lovable.dev/projects/244a4e9d-dc25-4d34-bc97-f6d857bc0fec
 
 ---
+<style>
+  .hisa-guide { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; }
+  .collapsible { background-color: #f0f7ff; border-left: 4px solid #4a90e2; margin: 12px 0; }
+  .collapsible summary { padding: 12px 15px; cursor: pointer; font-weight: 600; }
+  .collapsible .content { padding: 0 15px 15px; border-left: 2px dashed #cce0ff; }
+</style>
 
+<div class="hisa-guide">
 
+# HISA Project Repository Guide 
+- Test all interactive features
+- Verify responsive design
+- Check loading times and performance
 
+#### For the AMM:
+- Review mathematical formulas
+- Check error handling
+- Verify trading logic
+
+#### For Smart Contracts:
+- Review code for security vulnerabilities
+- Check gas optimization
+- Verify compliance with standards
+
+<details class="collapsible">
+<summary>## Key Evaluation Criteria</summary>
+<div class="content">
+
+### Technical Implementation
+- **Code Quality**: Clean, readable, and well-commented code
+- **Functionality**: Working features as described
+- **Security**: Proper error handling and security measures
+
+### Documentation Quality
+- **Completeness**: All components properly documented
+- **Clarity**: Clear explanations of functionality
+- **Technical Accuracy**: Correct technical specifications
+
+### Innovation and Utility
+- **Problem Solving**: How well the project addresses its stated goals
+- **Technical Innovation**: Novel approaches or implementations
+- **Market Viability**: Practical application and use cases
+</div>
+</details>
+
+<details class="collapsible">
+<summary>## Contact Information</summary>
+<div class="content">
+If you need clarification on any component or have questions about specific implementations, please refer to the contact information provided in the repository's README file.
+</div>
+</details>
+
+---
+
+*This guide provides a comprehensive overview of the HISA project structure. Each component can be evaluated independently while considering how they work together as a complete ecosystem.*
+
+</div>
 
 
