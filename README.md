@@ -172,62 +172,106 @@ Not just a product—**a platform** for:
 https://lovable.dev/projects/244a4e9d-dc25-4d34-bc97-f6d857bc0fec
 
 ---
-<style>
-  .hisa-guide { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; }
-  .collapsible { background-color: #f0f7ff; border-left: 4px solid #4a90e2; margin: 12px 0; }
-  .collapsible summary { padding: 12px 15px; cursor: pointer; font-weight: 600; }
-  .collapsible .content { padding: 0 15px 15px; border-left: 2px dashed #cce0ff; }
-</style>
+# HISA Project Repository Guide for Judge
 
-<div class="hisa-guide">
+## Overview
+This guide will help you navigate and evaluate the HISA project repository, which contains multiple components including a website, automated market maker (AMM), smart contracts, and documentation.
 
-# HISA Project Repository Guide 
-- Test all interactive features
-- Verify responsive design
-- Check loading times and performance
+## Repository Structure
 
-#### For the AMM:
-- Review mathematical formulas
-- Check error handling
-- Verify trading logic
+### 1. Website Components (Hosted on Vercel)
+**Location**: `git repo`
+**Tech**: HTML, CSS, JS
+**Live Demo**:  
 
-#### For Smart Contracts:
-- Review code for security vulnerabilities
-- Check gas optimization
-- Verify compliance with standards
+- **HTML files**: Core website structure and pages
+- **CSS files**: Styling and visual presentation
+- **JS files**: Interactive functionality and user interface logic
 
-<details class="collapsible">
-<summary>## Key Evaluation Criteria</summary>
-<div class="content">
+**How to Use**: Simply visit the live link top right . The frontend is static and doesn't require a server.
 
-### Technical Implementation
-- **Code Quality**: Clean, readable, and well-commented code
-- **Functionality**: Working features as described
-- **Security**: Proper error handling and security measures
+**How to Review**:
+- Navigate to the individuals files in the repository
+- Open HTML files in a browser to see the website structure
+- Check CSS files for styling implementation
+- Review JS files for functionality and user interactions
+- Visit the live Vercel deployment to see the working website
 
-### Documentation Quality
-- **Completeness**: All components properly documented
-- **Clarity**: Clear explanations of functionality
-- **Technical Accuracy**: Correct technical specifications
+### 2. Python AMM (Automated Market Maker)
+**Location**: `/amm` or `/python` folder
+**Platform**: Google Colab compatible
 
-### Innovation and Utility
-- **Problem Solving**: How well the project addresses its stated goals
-- **Technical Innovation**: Novel approaches or implementations
-- **Market Viability**: Practical application and use cases
-</div>
-</details>
+**Files to Review**:
+- `*.py` files containing the AMM logic
+- Jupyter notebook files (`.ipynb`) if present
+- Requirements or dependency files
 
-<details class="collapsible">
-<summary>## Contact Information</summary>
-<div class="content">
-If you need clarification on any component or have questions about specific implementations, please refer to the contact information provided in the repository's README file.
-</div>
-</details>
+**How to Review**:
+1. Open the Python files in any code editor
+2. For Colab execution:
+   - Upload the `.py` files to Google Colab
+   - Follow any setup instructions in the code comments
+   - Run the cells to see the AMM in action
+
+### 3. Smart Contracts
+**Location**: `/contracts` or `/solidity` folder
+**File Type**: `.sol` files
+
+**How to Review**:
+- Open `.sol` files in a text editor or Solidity IDE
+- Look for contract definitions, functions, and logic
+- Check for standard token implementations (ERC-20, etc.)
+- Review security features and access controls
+
+### 4. Documentation & Whitepaper
+**Location**: Root directory or `/docs` folder
+**File Type**: `.md` (Markdown) files
+
+**Key Documents**:
+- `README.md` - Project overview and setup instructions
+- `whitepaper.md` - Technical specifications and tokenomics
+- Other `.md` files - Additional documentation
+
+**How to Review**:
+- Open `.md` files in any text editor or Markdown viewer
+- Use GitHub's built-in markdown renderer for best viewing experience
+- Look for project description, technical details, and token specifications
+
+## Navigation Instructions
+
+### Step 1: Access the Repository
+1. Visit the GitHub repository URL
+2. Browse the file structure using GitHub's web interface
+3. Click on folders to explore different components
+
+### Step 2: Review Each Component
+
+#### Website Review:
+1. Navigate to website files (HTML/CSS/JS)
+2. Visit the live Vercel deployment
+3. Test website functionality and user interface
+
+#### AMM Review:
+1. Locate Python files
+2. Review the algorithmic trading logic
+3. Check mathematical models and calculations
+
+#### Smart Contracts Review:
+1. Open Solidity files
+2. Examine contract structure and functions
+3. Verify security implementations
+
+#### Documentation Review:
+1. Start with README.md for project overview
+2. Review whitepaper for technical details
+3. Check other documentation for completeness
+
+
+
+## Contact Information
+If you need clarification on any component or have questions about specific implementations, please refer to austinnamuye@gmail.com.
+
 
 ---
 
 *This guide provides a comprehensive overview of the HISA project structure. Each component can be evaluated independently while considering how they work together as a complete ecosystem.*
-
-</div>
-
-
