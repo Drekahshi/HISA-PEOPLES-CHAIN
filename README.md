@@ -274,5 +274,4 @@ If you need clarification on any component or have questions about specific impl
 
 ---
 
-*This guide provides a comprehensive overview of the HISA project structure. Each component can be evaluated independently while considering how they work together as a complete ecosystem.*
 
