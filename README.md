@@ -172,7 +172,7 @@ Not just a product—**a platform** for:
 https://lovable.dev/projects/244a4e9d-dc25-4d34-bc97-f6d857bc0fec
 
 ---
-# HISA Project Repository Guide for Judge
+# HISA Project Repository Guide 
 
 ## Overview
 This guide will help you navigate and evaluate the HISA project repository, which contains multiple components including a website, automated market maker (AMM), smart contracts, and documentation.
@@ -182,7 +182,7 @@ This guide will help you navigate and evaluate the HISA project repository, whic
 ### 1. Website Components (Hosted on Vercel)
 **Location**: `git repo`
 **Tech**: HTML, CSS, JS
-**Live Demo**:  
+**Live Demo**: https://hisa-peoples-chain.vercel.app/ 
 
 - **HTML files**: Core website structure and pages
 - **CSS files**: Styling and visual presentation
@@ -275,3 +275,4 @@ If you need clarification on any component or have questions about specific impl
 ---
 
 *This guide provides a comprehensive overview of the HISA project structure. Each component can be evaluated independently while considering how they work together as a complete ecosystem.*
+
